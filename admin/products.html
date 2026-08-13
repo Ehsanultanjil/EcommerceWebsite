@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Products — NOVA Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/css/variables.css" />
+<link rel="stylesheet" href="../assets/css/base.css" />
+<link rel="stylesheet" href="../assets/css/components.css" />
+<link rel="stylesheet" href="../assets/css/admin.css" />
+</head>
+<body class="admin-body">
+
+<div id="admin-sidebar-root"></div>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1>Products</h1>
+      <p class="text-secondary" id="products-count-label"></p>
+    </div>
+    <a href="product-edit.html" class="btn btn-primary">+ Add Product</a>
+  </div>
+
+  <div class="admin-toolbar">
+    <div class="admin-toolbar-left">
+      <input type="text" class="input admin-search-input" id="product-search" placeholder="Search products..." />
+      <select class="select" id="category-filter" style="width:auto">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card admin-table-card">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody id="products-table-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/format.js"></script>
+<script src="../assets/js/data/products.js"></script>
+<script src="../assets/js/data/categories.js"></script>
+<script src="../assets/js/data/admin-data.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/components/modal.js"></script>
+<script src="../assets/js/components/admin-sidebar.js"></script>
+<script src="../assets/js/pages/admin-products.js"></script>
+</body>
+</html>

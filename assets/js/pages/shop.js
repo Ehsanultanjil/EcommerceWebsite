@@ -1,0 +1,146 @@
+const PRICE_RANGES = [
+  { id: '0-50', label: '$0 – $50', min: 0, max: 50 },
+  { id: '50-100', label: '$50 – $100', min: 50, max: 100 },
+  { id: '100-200', label: '$100 – $200', min: 100, max: 200 },
+  { id: '200-plus', label: '$200+', min: 200, max: Infinity },
+];
+
+const shopState = {
+  categories: [],
+  price: null,
+  sort: 'featured',
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderNavbar('shop');
+  renderFooter();
+
+  const initialCategory = qs('category');
+  if (initialCategory) shopState.categories.push(initialCategory);
+  const filterParam = qs('filter');
+  if (filterParam === 'deals') shopState.sort = 'featured';
+
+  renderDesktopFilters();
+  bindToolbar();
+  applyFilters();
+});
+
+function getFilteredProducts() {
+  const filterParam = qs('filter');
+  let list = NOVA_PRODUCTS.slice();
+
+  if (filterParam === 'new') list = list.filter((p) => p.isNew);
+  if (filterParam === 'deals') list = list.filter((p) => p.originalPrice);
+
+  if (shopState.categories.length) {
+    list = list.filter((p) => shopState.categories.includes(p.category));
+  }
+  if (shopState.price) {
+    const range = PRICE_RANGES.find((r) => r.id === shopState.price);
+    list = list.filter((p) => p.price >= range.min && p.price < range.max);
+  }
+
+  switch (shopState.sort) {
+    case 'price-asc':
+      list.sort((a, b) => a.price - b.price);
+      break;
+    case 'price-desc':
+      list.sort((a, b) => b.price - a.price);
+      break;
+    case 'newest':
+      list.sort((a, b) => (b.isNew === a.isNew ? 0 : b.isNew ? 1 : -1));
+      break;
+  }
+  return list;
+}
+
+function applyFilters() {
+  const list = getFilteredProducts();
+  const grid = document.getElementById('shop-grid');
+  const empty = document.getElementById('shop-empty');
+  const count = document.getElementById('results-count');
+
+  count.textContent = `${list.length} Product${list.length === 1 ? '' : 's'}`;
+  grid.innerHTML = list.map(novaProductCardHtml).join('');
+  grid.hidden = list.length === 0;
+  empty.hidden = list.length !== 0;
+}
+
+function filterFormHtml() {
+  return `
+    <div class="filter-group">
+      <div class="filter-group-title">Category</div>
+      ${NOVA_CATEGORIES.map((cat) => `
+        <label class="checkbox-row">
+          <input type="checkbox" class="filter-category" value="${cat.id}" ${shopState.categories.includes(cat.id) ? 'checked' : ''} />
+          ${cat.name}
+        </label>
+      `).join('')}
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Price</div>
+      ${PRICE_RANGES.map((r) => `
+        <label class="radio-row">
+          <input type="radio" name="price-range" class="filter-price" value="${r.id}" ${shopState.price === r.id ? 'checked' : ''} />
+          ${r.label}
+        </label>
+      `).join('')}
+    </div>
+    <button class="btn btn-ghost btn-sm filter-clear-btn">Clear filters</button>
+  `;
+}
+
+function bindFilterInputs(container, onApply) {
+  container.querySelectorAll('.filter-category').forEach((el) => {
+    el.addEventListener('change', () => {
+      shopState.categories = Array.from(container.querySelectorAll('.filter-category:checked')).map((c) => c.value);
+      applyFilters();
+      if (onApply) onApply();
+    });
+  });
+  container.querySelectorAll('.filter-price').forEach((el) => {
+    el.addEventListener('change', () => {
+      shopState.price = el.checked ? el.value : null;
+      applyFilters();
+      if (onApply) onApply();
+    });
+  });
+  container.querySelector('.filter-clear-btn').addEventListener('click', () => {
+    shopState.categories = [];
+    shopState.price = null;
+    applyFilters();
+    renderDesktopFilters();
+    if (onApply) onApply(true);
+  });
+}
+
+function renderDesktopFilters() {
+  const el = document.getElementById('shop-filters-desktop');
+  el.innerHTML = filterFormHtml();
+  bindFilterInputs(el);
+}
+
+function bindToolbar() {
+  document.getElementById('sort-select').addEventListener('change', (e) => {
+    shopState.sort = e.target.value;
+    applyFilters();
+  });
+
+  document.getElementById('mobile-filter-btn').addEventListener('click', () => {
+    openModal(`
+      <h3>Filter &amp; Sort</h3>
+      <div class="filter-modal-body">${filterFormHtml()}</div>
+      <button class="btn btn-primary btn-block" id="mobile-filter-apply">View results</button>
+    `);
+    const overlay = document.getElementById('nova-modal');
+    bindFilterInputs(overlay, () => renderDesktopFilters());
+    overlay.querySelector('#mobile-filter-apply').addEventListener('click', closeModal);
+  });
+
+  document.getElementById('clear-filters-empty').addEventListener('click', () => {
+    shopState.categories = [];
+    shopState.price = null;
+    applyFilters();
+    renderDesktopFilters();
+  });
+}

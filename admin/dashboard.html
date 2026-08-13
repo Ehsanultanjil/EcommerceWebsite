@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — NOVA Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/css/variables.css" />
+<link rel="stylesheet" href="../assets/css/base.css" />
+<link rel="stylesheet" href="../assets/css/components.css" />
+<link rel="stylesheet" href="../assets/css/admin.css" />
+</head>
+<body class="admin-body">
+
+<div id="admin-sidebar-root"></div>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1>Dashboard</h1>
+      <p class="text-secondary">Good morning, Admin. Here's what's happening today.</p>
+    </div>
+  </div>
+
+  <div class="stat-grid" id="stat-grid"></div>
+
+  <div class="card chart-card">
+    <div class="chart-card-head">
+      <h3>Sales Overview</h3>
+      <span class="badge badge-neutral">Last 12 months</span>
+    </div>
+    <div id="chart-root"></div>
+    <div class="chart-axis-labels" id="chart-labels"></div>
+  </div>
+
+  <div class="card admin-table-card">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr>
+      </thead>
+      <tbody id="recent-orders-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/format.js"></script>
+<script src="../assets/js/data/products.js"></script>
+<script src="../assets/js/data/categories.js"></script>
+<script src="../assets/js/data/admin-data.js"></script>
+<script src="../assets/js/components/admin-sidebar.js"></script>
+<script src="../assets/js/components/admin-chart.js"></script>
+<script src="../assets/js/pages/admin-dashboard.js"></script>
+</body>
+</html>

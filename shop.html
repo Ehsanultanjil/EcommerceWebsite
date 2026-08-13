@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shop — NOVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/variables.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/navbar.css" />
+<link rel="stylesheet" href="assets/css/footer.css" />
+<link rel="stylesheet" href="assets/css/shop.css" />
+</head>
+<body>
+
+<div id="navbar-root"></div>
+
+<main class="page-body">
+  <div class="container">
+    <div class="shop-header">
+      <h1>Shop</h1>
+      <p class="text-secondary">Discover our complete collection.</p>
+    </div>
+
+    <div class="shop-layout">
+      <aside class="shop-filters" id="shop-filters-desktop"></aside>
+
+      <div class="shop-results">
+        <div class="shop-toolbar">
+          <span id="results-count" class="text-secondary"></span>
+          <div class="shop-toolbar-actions">
+            <button class="btn btn-outline btn-sm shop-filter-mobile-btn" id="mobile-filter-btn">Filter &amp; Sort</button>
+            <select class="select shop-sort" id="sort-select">
+              <option value="featured">Sort: Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-4" id="shop-grid"></div>
+        <div class="empty-state" id="shop-empty" hidden>
+          <h3>No products match your filters</h3>
+          <p>Try adjusting or clearing your filters.</p>
+          <button class="btn btn-secondary" id="clear-filters-empty">Clear filters</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="assets/js/utils/storage.js"></script>
+<script src="assets/js/utils/format.js"></script>
+<script src="assets/js/data/products.js"></script>
+<script src="assets/js/data/categories.js"></script>
+<script src="assets/js/components/toast.js"></script>
+<script src="assets/js/components/modal.js"></script>
+<script src="assets/js/components/navbar.js"></script>
+<script src="assets/js/components/search.js"></script>
+<script src="assets/js/components/footer.js"></script>
+<script src="assets/js/components/product-card.js"></script>
+<script src="assets/js/pages/shop.js"></script>
+</body>
+</html>

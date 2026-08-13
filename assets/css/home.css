@@ -1,0 +1,242 @@
+/* ---------- Hero ---------- */
+.hero {
+  padding-top: var(--navbar-height);
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.hero-copy h1 {
+  margin-top: var(--space-3);
+  font-size: 56px;
+}
+
+.hero-sub {
+  margin-top: var(--space-4);
+  font-size: 17px;
+  max-width: 420px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.hero-media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4 / 4.6;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding: calc(var(--navbar-height) + var(--space-7)) 0 var(--space-7);
+  }
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+  .hero-copy h1 {
+    font-size: 36px;
+  }
+}
+
+/* ---------- Category grid ---------- */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.category-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 3 / 3.6;
+  display: block;
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition);
+}
+
+.category-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 55%);
+}
+
+.category-card:hover img {
+  transform: scale(1.06);
+}
+
+.category-label {
+  position: absolute;
+  left: var(--space-4);
+  right: var(--space-4);
+  bottom: var(--space-4);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.category-label .link-arrow {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+/* ---------- Promo banner ---------- */
+.promo-banner {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-5);
+  text-align: center;
+}
+
+.promo-banner .eyebrow {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.promo-banner h2 {
+  color: #fff;
+  margin-top: var(--space-2);
+}
+
+.promo-banner p {
+  margin-top: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.promo-banner .btn-primary {
+  background: #fff;
+  color: var(--accent);
+}
+
+.promo-banner .btn-primary:hover {
+  background: #F1F1EF;
+}
+
+/* ---------- Carousel ---------- */
+.carousel-controls {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.carousel-controls .icon-btn {
+  border: 1px solid var(--border);
+}
+
+.carousel-track {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-2);
+  scrollbar-width: none;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-item {
+  flex: 0 0 260px;
+  scroll-snap-align: start;
+}
+
+/* ---------- Brand story ---------- */
+.brand-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-7);
+  align-items: center;
+}
+
+.brand-story-media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  aspect-ratio: 4 / 3.6;
+}
+
+.brand-story-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.brand-story-copy p {
+  margin: var(--space-4) 0 var(--space-5);
+  max-width: 420px;
+  font-size: 16px;
+}
+
+@media (max-width: 900px) {
+  .brand-story {
+    grid-template-columns: 1fr;
+  }
+  .brand-story-copy {
+    order: 2;
+  }
+}
+
+/* ---------- Newsletter ---------- */
+.newsletter-section {
+  background: #fff;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.newsletter-inner {
+  text-align: center;
+}
+
+.newsletter-inner p {
+  margin: var(--space-2) 0 var(--space-5);
+}
+
+.newsletter-form {
+  display: flex;
+  gap: var(--space-3);
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.newsletter-form .input {
+  flex: 1;
+}
+
+@media (max-width: 560px) {
+  .newsletter-form {
+    flex-direction: column;
+  }
+}

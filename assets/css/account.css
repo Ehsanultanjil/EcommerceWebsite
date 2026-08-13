@@ -1,0 +1,194 @@
+.account-page {
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.account-page > h1 {
+  margin-bottom: var(--space-6);
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--space-7);
+  align-items: start;
+}
+
+.account-nav {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.account-nav-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.account-nav-link:last-child {
+  border-bottom: none;
+}
+
+.account-nav-link:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.account-nav-link.active {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.account-logout {
+  color: var(--danger);
+}
+
+.account-content {
+  min-width: 0;
+}
+
+.account-content h3 {
+  margin-bottom: var(--space-5);
+}
+
+/* Profile */
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.profile-name {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+/* Order card */
+.order-card {
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.order-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.order-card-id {
+  font-weight: 700;
+}
+
+.order-card-date {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.order-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  font-size: 14px;
+}
+
+.order-status-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.order-status-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.order-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+}
+
+.order-status-step.done .order-status-dot {
+  background: var(--success);
+}
+
+.order-status-step.done {
+  color: var(--text);
+}
+
+.order-status-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Addresses */
+.address-card {
+  padding: var(--space-5);
+  margin-bottom: var(--space-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.address-card-name {
+  font-weight: 700;
+  margin-bottom: var(--space-1);
+}
+
+/* Wishlist grid reuses grid-4 */
+
+.settings-row {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-row:last-of-type {
+  border-bottom: none;
+}
+
+@media (max-width: 900px) {
+  .account-layout {
+    grid-template-columns: 1fr;
+  }
+  .account-nav {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+  .account-nav-link {
+    white-space: nowrap;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+  }
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Settings — NOVA Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/css/variables.css" />
+<link rel="stylesheet" href="../assets/css/base.css" />
+<link rel="stylesheet" href="../assets/css/components.css" />
+<link rel="stylesheet" href="../assets/css/admin.css" />
+</head>
+<body class="admin-body">
+
+<div id="admin-sidebar-root"></div>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1>Settings</h1>
+      <p class="text-secondary">Manage your store preferences.</p>
+    </div>
+  </div>
+
+  <div class="card admin-form-card" style="max-width:640px">
+    <h3>Store Details</h3>
+    <form id="settings-form">
+      <div class="field"><label>Store Name</label><input class="input" name="storeName" value="NOVA" required /></div>
+      <div class="field"><label>Support Email</label><input class="input" type="email" name="email" value="support@nova-store.com" required /></div>
+      <div class="form-row">
+        <div class="field">
+          <label>Currency</label>
+          <select class="select" name="currency">
+            <option>USD ($)</option>
+            <option>EUR (€)</option>
+            <option>GBP (£)</option>
+            <option>INR (₹)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Timezone</label>
+          <select class="select" name="timezone">
+            <option>GMT+05:30 (India)</option>
+            <option>GMT+00:00 (UTC)</option>
+            <option>GMT-05:00 (Eastern)</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Settings</button>
+    </form>
+  </div>
+</main>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/components/admin-sidebar.js"></script>
+<script src="../assets/js/pages/admin-settings.js"></script>
+</body>
+</html>

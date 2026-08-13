@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orders — NOVA Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/css/variables.css" />
+<link rel="stylesheet" href="../assets/css/base.css" />
+<link rel="stylesheet" href="../assets/css/components.css" />
+<link rel="stylesheet" href="../assets/css/admin.css" />
+</head>
+<body class="admin-body">
+
+<div id="admin-sidebar-root"></div>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1>Orders</h1>
+      <p class="text-secondary" id="orders-count-label"></p>
+    </div>
+  </div>
+
+  <div class="admin-toolbar">
+    <div class="admin-toolbar-left">
+      <input type="text" class="input admin-search-input" id="order-search" placeholder="Search by customer or order #..." />
+      <select class="select" id="status-filter" style="width:auto">
+        <option value="">All Statuses</option>
+        <option>Confirmed</option>
+        <option>Processing</option>
+        <option>Shipped</option>
+        <option>Delivered</option>
+        <option>Cancelled</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card admin-table-card">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Order</th><th>Customer</th><th>Date</th><th>Items</th><th>Total</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody id="orders-table-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="../assets/js/utils/storage.js"></script>
+<script src="../assets/js/utils/format.js"></script>
+<script src="../assets/js/data/admin-data.js"></script>
+<script src="../assets/js/components/toast.js"></script>
+<script src="../assets/js/components/modal.js"></script>
+<script src="../assets/js/components/admin-sidebar.js"></script>
+<script src="../assets/js/pages/admin-orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Checkout — NOVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/variables.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/navbar.css" />
+<link rel="stylesheet" href="assets/css/footer.css" />
+<link rel="stylesheet" href="assets/css/checkout.css" />
+</head>
+<body>
+
+<div id="navbar-root"></div>
+
+<main class="page-body">
+  <div class="container checkout-page">
+    <h1>Checkout</h1>
+
+    <div class="checkout-layout">
+      <form class="checkout-form" id="checkout-form">
+
+        <section class="checkout-step">
+          <div class="checkout-step-title"><span class="step-number">01</span> Shipping</div>
+          <div class="field"><label>Full Name</label><input class="input" name="fullName" required /></div>
+          <div class="form-row">
+            <div class="field"><label>Email</label><input class="input" type="email" name="email" required /></div>
+            <div class="field"><label>Phone</label><input class="input" type="tel" name="phone" required /></div>
+          </div>
+          <div class="field"><label>Address</label><input class="input" name="address" required /></div>
+          <div class="form-row">
+            <div class="field"><label>City</label><input class="input" name="city" required /></div>
+            <div class="field"><label>Postal Code</label><input class="input" name="postal" required /></div>
+          </div>
+        </section>
+
+        <section class="checkout-step">
+          <div class="checkout-step-title"><span class="step-number">02</span> Payment</div>
+          <label class="radio-row payment-option">
+            <input type="radio" name="payment" value="Cash on Delivery" checked />
+            Cash on Delivery
+          </label>
+          <label class="radio-row payment-option">
+            <input type="radio" name="payment" value="Credit / Debit Card" />
+            Credit / Debit Card
+          </label>
+          <label class="radio-row payment-option">
+            <input type="radio" name="payment" value="Mobile Payment" />
+            Mobile Payment
+          </label>
+        </section>
+
+        <section class="checkout-step">
+          <div class="checkout-step-title"><span class="step-number">03</span> Review</div>
+          <div id="review-items" class="review-items"></div>
+        </section>
+      </form>
+
+      <aside class="checkout-summary card card-pad" id="checkout-summary"></aside>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="assets/js/utils/storage.js"></script>
+<script src="assets/js/utils/format.js"></script>
+<script src="assets/js/data/products.js"></script>
+<script src="assets/js/data/categories.js"></script>
+<script src="assets/js/components/toast.js"></script>
+<script src="assets/js/components/modal.js"></script>
+<script src="assets/js/components/navbar.js"></script>
+<script src="assets/js/components/search.js"></script>
+<script src="assets/js/components/footer.js"></script>
+<script src="assets/js/pages/checkout.js"></script>
+</body>
+</html>

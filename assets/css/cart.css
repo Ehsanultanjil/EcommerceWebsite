@@ -1,0 +1,137 @@
+.cart-page {
+  padding: var(--space-7) 0 var(--space-8);
+}
+
+.cart-header {
+  margin-bottom: var(--space-6);
+}
+
+.cart-header p {
+  margin-top: var(--space-1);
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.cart-table {
+  overflow: hidden;
+}
+
+.cart-table-head,
+.cart-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 0.8fr 0.8fr 40px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+}
+
+.cart-table-head {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-row:last-child {
+  border-bottom: none;
+}
+
+.cart-row-product {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.cart-row-product img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.cart-row-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cart-row-color {
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.cart-row-total {
+  font-weight: 700;
+}
+
+.order-summary h3 {
+  margin-bottom: var(--space-5);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: var(--space-2) 0;
+  color: var(--text-secondary);
+}
+
+.summary-total {
+  color: var(--text);
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.summary-divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-3) 0;
+}
+
+.promo-row {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+}
+
+.promo-row .input {
+  height: 40px;
+}
+
+.order-summary .btn-block {
+  margin-top: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .cart-table-head {
+    display: none;
+  }
+  .cart-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+    position: relative;
+  }
+  .cart-row-total::before {
+    content: 'Total: ';
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+  .cart-remove {
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+  }
+}

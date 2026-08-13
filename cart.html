@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cart — NOVA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/variables.css" />
+<link rel="stylesheet" href="assets/css/base.css" />
+<link rel="stylesheet" href="assets/css/components.css" />
+<link rel="stylesheet" href="assets/css/navbar.css" />
+<link rel="stylesheet" href="assets/css/footer.css" />
+<link rel="stylesheet" href="assets/css/cart.css" />
+</head>
+<body>
+
+<div id="navbar-root"></div>
+
+<main class="page-body">
+  <div class="container cart-page">
+    <div class="cart-header">
+      <h1>Your Cart</h1>
+      <p class="text-secondary" id="cart-item-count">0 items</p>
+    </div>
+
+    <div id="cart-root"></div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+
+<script src="assets/js/utils/storage.js"></script>
+<script src="assets/js/utils/format.js"></script>
+<script src="assets/js/data/products.js"></script>
+<script src="assets/js/data/categories.js"></script>
+<script src="assets/js/components/toast.js"></script>
+<script src="assets/js/components/modal.js"></script>
+<script src="assets/js/components/navbar.js"></script>
+<script src="assets/js/components/search.js"></script>
+<script src="assets/js/components/footer.js"></script>
+<script src="assets/js/pages/cart.js"></script>
+</body>
+</html>
