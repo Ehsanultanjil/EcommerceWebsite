@@ -6,7 +6,7 @@ function renderFooter() {
     <footer class="site-footer">
       <div class="container footer-grid">
         <div class="footer-brand">
-          <div class="navbar-logo">NOVA</div>
+          <div class="navbar-logo">BARAZ</div>
           <p class="text-secondary">Elevated everyday essentials.</p>
         </div>
 
@@ -36,7 +36,7 @@ function renderFooter() {
       </div>
 
       <div class="container footer-bottom">
-        <span>&copy; ${year} NOVA</span>
+        <span>&copy; ${year} BARAZ</span>
         <div class="footer-bottom-links">
           <a href="#">Terms</a>
           <a href="#">Privacy</a>

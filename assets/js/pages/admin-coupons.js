@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderCouponsTable() {
-  const coupons = novaAllAdminCoupons();
+  const coupons = barazAllAdminCoupons();
   document.getElementById('coupons-count-label').textContent = `${coupons.length} coupons`;
 
   document.getElementById('coupons-table-body').innerHTML = coupons.map((c) => `
@@ -31,14 +31,14 @@ function renderCouponsTable() {
 
   document.querySelectorAll('.edit-coupon-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const coupon = novaAllAdminCoupons().find((c) => c.code === btn.dataset.code);
+      const coupon = barazAllAdminCoupons().find((c) => c.code === btn.dataset.code);
       openCouponModal(coupon);
     });
   });
 
   document.querySelectorAll('.delete-coupon-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      novaDeleteAdminCoupon(btn.dataset.code);
+      barazDeleteAdminCoupon(btn.dataset.code);
       showToast('Coupon deleted');
       renderCouponsTable();
     });
@@ -71,7 +71,7 @@ function openCouponModal(coupon) {
   document.getElementById('coupon-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
-    novaSaveAdminCoupon({
+    barazSaveAdminCoupon({
       code: data.get('code').toUpperCase(),
       type: data.get('type'),
       value: data.get('value'),

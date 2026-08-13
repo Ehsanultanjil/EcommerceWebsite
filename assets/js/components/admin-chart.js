@@ -1,4 +1,4 @@
-function novaLineChartSvg(data, options = {}) {
+function barazLineChartSvg(data, options = {}) {
   const width = options.width || 1000;
   const height = options.height || 220;
   const padding = 24;
@@ -25,13 +25,13 @@ function novaLineChartSvg(data, options = {}) {
   return `
     <svg class="chart-svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
       <defs>
-        <linearGradient id="novaChartFill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="barazChartFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.16" />
           <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
         </linearGradient>
       </defs>
       ${gridLines}
-      <path d="${areaPath}" fill="url(#novaChartFill)" />
+      <path d="${areaPath}" fill="url(#barazChartFill)" />
       <path d="${linePath}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
       ${dots}
     </svg>

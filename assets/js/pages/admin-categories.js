@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderCategoriesTable() {
-  const categories = novaAllAdminCategories();
-  const products = novaAllAdminProducts();
+  const categories = barazAllAdminCategories();
+  const products = barazAllAdminProducts();
 
   document.getElementById('categories-count-label').textContent = `${categories.length} categories`;
 
@@ -37,14 +37,14 @@ function renderCategoriesTable() {
 
   document.querySelectorAll('.edit-category-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      const cat = novaAllAdminCategories().find((c) => c.id === btn.dataset.id);
+      const cat = barazAllAdminCategories().find((c) => c.id === btn.dataset.id);
       openCategoryModal(cat);
     });
   });
 
   document.querySelectorAll('.delete-category-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      novaDeleteAdminCategory(btn.dataset.id);
+      barazDeleteAdminCategory(btn.dataset.id);
       showToast('Category deleted');
       renderCategoriesTable();
     });
@@ -57,7 +57,7 @@ function openCategoryModal(category) {
     <h3>${editing ? 'Edit' : 'Add'} Category</h3>
     <form id="category-form" style="margin-top:20px;display:flex;flex-direction:column;gap:16px">
       <div class="field"><label>Name</label><input class="input" name="name" value="${editing ? category.name : ''}" required /></div>
-      <div class="field"><label>Image URL</label><input class="input" name="image" value="${editing ? category.image : 'https://picsum.photos/seed/nova-cat-new/700/860'}" required /></div>
+      <div class="field"><label>Image URL</label><input class="input" name="image" value="${editing ? category.image : 'https://picsum.photos/seed/baraz-cat-new/700/860'}" required /></div>
       <button type="submit" class="btn btn-primary btn-block">Save Category</button>
     </form>
   `);
@@ -67,7 +67,7 @@ function openCategoryModal(category) {
     const data = new FormData(e.target);
     const name = data.get('name');
     const id = editing ? category.id : name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    novaSaveAdminCategory({ id, name, image: data.get('image') });
+    barazSaveAdminCategory({ id, name, image: data.get('image') });
     closeModal();
     showToast(editing ? 'Category updated' : 'Category added');
     renderCategoriesTable();

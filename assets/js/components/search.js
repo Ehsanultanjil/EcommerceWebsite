@@ -1,11 +1,11 @@
-const NOVA_POPULAR_SEARCHES = ['Headphones', 'Smart watches', 'Backpacks', 'Sneakers'];
+const BARAZ_POPULAR_SEARCHES = ['Headphones', 'Smart watches', 'Backpacks', 'Sneakers'];
 
 function initSearch() {
   const toggle = document.getElementById('nav-search-toggle');
   const close = document.getElementById('nav-search-close');
-  const overlay = document.getElementById('nova-search-overlay');
-  const input = document.getElementById('nova-search-input');
-  const results = document.getElementById('nova-search-results');
+  const overlay = document.getElementById('baraz-search-overlay');
+  const input = document.getElementById('baraz-search-input');
+  const results = document.getElementById('baraz-search-results');
 
   if (!toggle || !overlay) return;
 
@@ -32,7 +32,7 @@ function initSearch() {
     results.innerHTML = `
       <div class="search-section-label">Popular searches</div>
       <div class="search-chip-row">
-        ${NOVA_POPULAR_SEARCHES.map((term) => `<button class="search-chip" data-term="${term}">${term}</button>`).join('')}
+        ${BARAZ_POPULAR_SEARCHES.map((term) => `<button class="search-chip" data-term="${term}">${term}</button>`).join('')}
       </div>
     `;
     results.querySelectorAll('.search-chip').forEach((chip) => {
@@ -46,7 +46,7 @@ function initSearch() {
   function renderResults(term) {
     const q = term.trim().toLowerCase();
     if (!q) return renderDefault();
-    const matches = NOVA_PRODUCTS.filter((p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)).slice(0, 6);
+    const matches = BARAZ_PRODUCTS.filter((p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)).slice(0, 6);
     if (matches.length === 0) {
       results.innerHTML = `<div class="search-section-label">No results for "${term}"</div>`;
       return;

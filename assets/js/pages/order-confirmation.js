@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderNavbar('confirmation');
   renderFooter();
-  NovaStore.seedOrders(NOVA_SEED_ORDERS);
+  BarazStore.seedOrders(BARAZ_SEED_ORDERS);
 
   const orderId = qs('order');
-  const orders = NovaStore.getOrders() || [];
+  const orders = BarazStore.getOrders() || [];
   const order = orders.find((o) => o.id === orderId) || orders[0];
 
   document.getElementById('confirmation-root').innerHTML = `

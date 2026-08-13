@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderAdminSidebar('analytics');
 
-  const totalRevenue = NOVA_REVENUE_SERIES.reduce((a, b) => a + b, 0);
-  const avgOrder = Math.round(totalRevenue / (NOVA_ADMIN_ORDERS.length * 41));
+  const totalRevenue = BARAZ_REVENUE_SERIES.reduce((a, b) => a + b, 0);
+  const avgOrder = Math.round(totalRevenue / (BARAZ_ADMIN_ORDERS.length * 41));
 
   document.getElementById('analytics-stat-grid').innerHTML = `
     <div class="card stat-tile">
@@ -22,11 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   `;
 
-  document.getElementById('analytics-chart-root').innerHTML = novaLineChartSvg(NOVA_REVENUE_SERIES, { height: 260 });
-  document.getElementById('analytics-chart-labels').innerHTML = NOVA_REVENUE_MONTHS.map((m) => `<span>${m}</span>`).join('');
+  document.getElementById('analytics-chart-root').innerHTML = barazLineChartSvg(BARAZ_REVENUE_SERIES, { height: 260 });
+  document.getElementById('analytics-chart-labels').innerHTML = BARAZ_REVENUE_MONTHS.map((m) => `<span>${m}</span>`).join('');
 
-  const products = novaAllAdminProducts();
-  const categories = novaAllAdminCategories();
+  const products = barazAllAdminProducts();
+  const categories = barazAllAdminCategories();
   const breakdown = categories.map((c) => ({
     name: c.name,
     count: products.filter((p) => p.category === c.id).length,

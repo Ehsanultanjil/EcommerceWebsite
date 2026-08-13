@@ -2,7 +2,7 @@ function openModal(innerHtml) {
   closeModal();
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
-  overlay.id = 'nova-modal';
+  overlay.id = 'baraz-modal';
   overlay.innerHTML = `
     <div class="modal">
       <button class="icon-btn modal-close" aria-label="Close" onclick="closeModal()">
@@ -20,7 +20,7 @@ function openModal(innerHtml) {
 }
 
 function closeModal() {
-  const overlay = document.getElementById('nova-modal');
+  const overlay = document.getElementById('baraz-modal');
   if (!overlay) return;
   overlay.classList.remove('open');
   document.body.style.overflow = '';

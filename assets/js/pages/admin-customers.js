@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderCustomersTable() {
-  let list = NOVA_ADMIN_CUSTOMERS;
+  let list = BARAZ_ADMIN_CUSTOMERS;
   if (customerSearch) {
     list = list.filter((c) => c.name.toLowerCase().includes(customerSearch) || c.email.toLowerCase().includes(customerSearch));
   }

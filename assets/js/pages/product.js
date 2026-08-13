@@ -1,4 +1,4 @@
-const NOVA_SAMPLE_REVIEWS = [
+const BARAZ_SAMPLE_REVIEWS = [
   { name: 'Amara K.', stars: 5, text: 'Exactly as described — the quality feels premium and it arrived well packaged.' },
   { name: 'Daniel R.', stars: 5, text: 'Been using it daily for a month now. Holding up great, would buy again.' },
   { name: 'Priya S.', stars: 4, text: 'Really solid product. Only wish it came in one more color option.' },
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter();
 
   const id = qs('id');
-  currentProduct = novaGetProduct(id) || NOVA_PRODUCTS[0];
+  currentProduct = barazGetProduct(id) || BARAZ_PRODUCTS[0];
   selectedColor = currentProduct.colors[0].name;
 
   renderProduct();
@@ -61,7 +61,7 @@ function renderProduct() {
         <div class="product-actions">
           <button class="btn btn-primary btn-block" id="add-to-cart-btn">Add to Cart</button>
           <button class="btn btn-secondary btn-block" id="add-to-wishlist-btn">
-            ${NOVA_ICONS.heart} Add to Wishlist
+            ${BARAZ_ICONS.heart} Add to Wishlist
           </button>
         </div>
       </div>
@@ -82,7 +82,7 @@ function renderProduct() {
         </table>
       </div>
       <div class="tab-panel" id="tab-reviews">
-        ${NOVA_SAMPLE_REVIEWS.map((r) => `
+        ${BARAZ_SAMPLE_REVIEWS.map((r) => `
           <div class="review-item">
             <div class="review-head">
               <span class="review-name">${r.name}</span>
@@ -114,14 +114,14 @@ function renderProduct() {
   });
 
   document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-    NovaStore.addToCart(p.id, selectedQty, selectedColor);
+    BarazStore.addToCart(p.id, selectedQty, selectedColor);
     showToast(`${p.name} added to cart`);
   });
 
   const wishlistBtn = document.getElementById('add-to-wishlist-btn');
-  if (NovaStore.isWishlisted(p.id)) wishlistBtn.classList.add('wishlisted');
+  if (BarazStore.isWishlisted(p.id)) wishlistBtn.classList.add('wishlisted');
   wishlistBtn.addEventListener('click', () => {
-    const active = NovaStore.toggleWishlist(p.id);
+    const active = BarazStore.toggleWishlist(p.id);
     wishlistBtn.classList.toggle('wishlisted', active);
     showToast(active ? 'Added to wishlist' : 'Removed from wishlist');
   });
@@ -137,6 +137,6 @@ function renderProduct() {
 }
 
 function renderRelated() {
-  const related = novaRelatedProducts(currentProduct, 4);
-  document.getElementById('related-grid').innerHTML = related.map(novaProductCardHtml).join('');
+  const related = barazRelatedProducts(currentProduct, 4);
+  document.getElementById('related-grid').innerHTML = related.map(barazProductCardHtml).join('');
 }

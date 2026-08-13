@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter();
   renderAccountSidebar('profile');
 
-  const session = NovaStore.getSession();
+  const session = BarazStore.getSession();
   const content = document.getElementById('account-content');
 
   if (!session) {
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('profile-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
-    NovaStore.login(data.get('name'), data.get('email'));
+    BarazStore.login(data.get('name'), data.get('email'));
     showToast('Profile updated');
     document.querySelector('.profile-name').textContent = data.get('name');
     document.querySelector('.profile-avatar').textContent = data.get('name').trim().charAt(0).toUpperCase();

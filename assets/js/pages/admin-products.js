@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAdminSidebar('products');
 
   const categorySelect = document.getElementById('category-filter');
-  categorySelect.innerHTML += NOVA_CATEGORIES.map((c) => `<option value="${c.id}">${c.name}</option>`).join('');
+  categorySelect.innerHTML += BARAZ_CATEGORIES.map((c) => `<option value="${c.id}">${c.name}</option>`).join('');
   categorySelect.addEventListener('change', () => {
     adminProductsState.category = categorySelect.value;
     renderProductsTable();
@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderProductsTable() {
-  let list = novaAllAdminProducts();
+  let list = barazAllAdminProducts();
   if (adminProductsState.category) list = list.filter((p) => p.category === adminProductsState.category);
   if (adminProductsState.search) list = list.filter((p) => p.name.toLowerCase().includes(adminProductsState.search));
 
   document.getElementById('products-count-label').textContent = `${list.length} products`;
 
   document.getElementById('products-table-body').innerHTML = list.map((p) => {
-    const stock = novaAdminStock(p);
+    const stock = barazAdminStock(p);
     return `
       <tr>
         <td>
@@ -56,14 +56,14 @@ function renderProductsTable() {
   document.querySelectorAll('.delete-product-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const id = Number(btn.dataset.id);
-      const product = novaAllAdminProducts().find((p) => p.id === id);
+      const product = barazAllAdminProducts().find((p) => p.id === id);
       openModal(`
         <h3>Delete product?</h3>
         <p class="text-secondary" style="margin:12px 0 20px">Remove "${product.name}" from the catalog. This can't be undone.</p>
         <button class="btn btn-danger btn-block" id="confirm-delete-product">Delete</button>
       `);
       document.getElementById('confirm-delete-product').addEventListener('click', () => {
-        novaDeleteAdminProduct(id);
+        barazDeleteAdminProduct(id);
         closeModal();
         showToast('Product deleted');
         renderProductsTable();

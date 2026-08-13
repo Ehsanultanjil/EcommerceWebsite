@@ -1,4 +1,4 @@
-const NOVA_ADMIN_LINKS = [
+const BARAZ_ADMIN_LINKS = [
   { id: 'dashboard', label: 'Dashboard', href: 'dashboard.html' },
   { id: 'products', label: 'Products', href: 'products.html' },
   { id: 'categories', label: 'Categories', href: 'categories.html' },
@@ -8,7 +8,7 @@ const NOVA_ADMIN_LINKS = [
   { id: 'analytics', label: 'Analytics', href: 'analytics.html' },
 ];
 
-const NOVA_ADMIN_ICONS = {
+const BARAZ_ADMIN_ICONS = {
   dashboard: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>',
   products: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
   categories: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>',
@@ -24,17 +24,17 @@ function renderAdminSidebar(active) {
   if (!root) return;
   root.innerHTML = `
     <aside class="admin-sidebar">
-      <div class="admin-logo">NOVA <span>ADMIN</span></div>
+      <div class="admin-logo">BARAZ <span>ADMIN</span></div>
       <nav class="admin-nav">
-        ${NOVA_ADMIN_LINKS.map((l) => `
+        ${BARAZ_ADMIN_LINKS.map((l) => `
           <a href="${l.href}" class="admin-nav-link${l.id === active ? ' active' : ''}">
-            ${NOVA_ADMIN_ICONS[l.id]}<span>${l.label}</span>
+            ${BARAZ_ADMIN_ICONS[l.id]}<span>${l.label}</span>
           </a>
         `).join('')}
       </nav>
       <div class="admin-nav admin-nav-bottom">
         <a href="settings.html" class="admin-nav-link${active === 'settings' ? ' active' : ''}">
-          ${NOVA_ADMIN_ICONS.settings}<span>Settings</span>
+          ${BARAZ_ADMIN_ICONS.settings}<span>Settings</span>
         </a>
         <a href="../index.html" class="admin-nav-link">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg>

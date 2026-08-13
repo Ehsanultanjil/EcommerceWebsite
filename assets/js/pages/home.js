@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter();
 
   const categoryGrid = document.getElementById('category-grid');
-  categoryGrid.innerHTML = NOVA_CATEGORIES.map((cat) => `
+  categoryGrid.innerHTML = BARAZ_CATEGORIES.map((cat) => `
     <a href="shop.html?category=${cat.id}" class="category-card">
       <img src="${cat.image}" alt="${cat.name}" />
       <div class="category-overlay"></div>
@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
   `).join('');
 
   const featuredGrid = document.getElementById('featured-grid');
-  featuredGrid.innerHTML = NOVA_PRODUCTS.slice(0, 8).map(novaProductCardHtml).join('');
+  featuredGrid.innerHTML = BARAZ_PRODUCTS.slice(0, 8).map(barazProductCardHtml).join('');
 
   const track = document.getElementById('new-arrivals-track');
-  const newArrivals = NOVA_PRODUCTS.filter((p) => p.isNew).concat(NOVA_PRODUCTS.filter((p) => !p.isNew)).slice(0, 8);
-  track.innerHTML = newArrivals.map((p) => `<div class="carousel-item">${novaProductCardHtml(p)}</div>`).join('');
+  const newArrivals = BARAZ_PRODUCTS.filter((p) => p.isNew).concat(BARAZ_PRODUCTS.filter((p) => !p.isNew)).slice(0, 8);
+  track.innerHTML = newArrivals.map((p) => `<div class="carousel-item">${barazProductCardHtml(p)}</div>`).join('');
 
   document.getElementById('carousel-next').addEventListener('click', () => {
     track.scrollBy({ left: 320, behavior: 'smooth' });
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('newsletter-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    showToast('Subscribed! Welcome to NOVA.');
+    showToast('Subscribed! Welcome to BARAZ.');
     e.target.reset();
   });
 });

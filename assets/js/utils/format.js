@@ -1,5 +1,7 @@
 function formatCurrency(amount) {
-  return '$' + Number(amount).toFixed(2).replace(/\.00$/, '');
+  const num = Number(amount);
+  const formatted = Number.isInteger(num) ? num.toLocaleString('en-US') : num.toFixed(2);
+  return '৳' + formatted;
 }
 
 function formatDate(isoString) {

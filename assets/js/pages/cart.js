@@ -2,11 +2,11 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNavbar('cart');
   renderFooter();
   renderCart();
-  document.addEventListener('nova:cart-change', renderCart);
+  document.addEventListener('baraz:cart-change', renderCart);
 });
 
 function renderCart() {
-  const cart = NovaStore.getCart();
+  const cart = BarazStore.getCart();
   const root = document.getElementById('cart-root');
   const countLabel = document.getElementById('cart-item-count');
   const itemCount = cart.reduce((sum, i) => sum + i.qty, 0);
@@ -23,10 +23,10 @@ function renderCart() {
     return;
   }
 
-  const lines = cart.map((item) => ({ item, product: novaGetProduct(item.id) })).filter((l) => l.product);
+  const lines = cart.map((item) => ({ item, product: barazGetProduct(item.id) })).filter((l) => l.product);
   const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.item.qty, 0);
-  const shipping = subtotal > 150 ? 0 : 10;
-  const discount = window.__novaCartDiscount || 0;
+  const shipping = subtotal > 15000 ? 0 : 1000;
+  const discount = window.__barazCartDiscount || 0;
   const total = subtotal + shipping - discount;
 
   root.innerHTML = `
@@ -87,13 +87,13 @@ function renderCart() {
       const color = stepper.dataset.color || null;
       const current = cart.find((i) => i.id === id && (i.color || '') === (color || ''));
       const delta = btn.classList.contains('cart-qty-plus') ? 1 : -1;
-      NovaStore.updateCartQty(id, color, current.qty + delta);
+      BarazStore.updateCartQty(id, color, current.qty + delta);
     });
   });
 
   root.querySelectorAll('.cart-remove').forEach((btn) => {
     btn.addEventListener('click', () => {
-      NovaStore.removeFromCart(Number(btn.dataset.id), btn.dataset.color || null);
+      BarazStore.removeFromCart(Number(btn.dataset.id), btn.dataset.color || null);
       showToast('Removed from cart');
     });
   });
@@ -101,11 +101,11 @@ function renderCart() {
   const promoApply = document.getElementById('promo-apply');
   promoApply.addEventListener('click', () => {
     const code = document.getElementById('promo-input').value.trim().toUpperCase();
-    if (code === 'NOVA15') {
-      window.__novaCartDiscount = 15;
+    if (code === 'BARAZ15') {
+      window.__barazCartDiscount = 1500;
       showToast('Promo code applied');
     } else {
-      window.__novaCartDiscount = 0;
+      window.__barazCartDiscount = 0;
       showToast('Invalid promo code');
     }
     renderCart();

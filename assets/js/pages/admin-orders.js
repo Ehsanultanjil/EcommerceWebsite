@@ -1,4 +1,4 @@
-const NOVA_ORDER_STATUS_OPTIONS = ['Confirmed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const BARAZ_ORDER_STATUS_OPTIONS = ['Confirmed', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
 let adminOrdersState = { search: '', status: '' };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderOrdersTable() {
-  let list = novaAllAdminOrders();
+  let list = barazAllAdminOrders();
   if (adminOrdersState.status) list = list.filter((o) => o.status === adminOrdersState.status);
   if (adminOrdersState.search) {
     const q = adminOrdersState.search;
@@ -33,7 +33,7 @@ function renderOrdersTable() {
       <td>${formatDate(o.date)}</td>
       <td>${o.items}</td>
       <td>${formatCurrency(o.total)}</td>
-      <td><span class="badge ${novaAdminOrderStatusClass(o.status)}">${o.status}</span></td>
+      <td><span class="badge ${barazAdminOrderStatusClass(o.status)}">${o.status}</span></td>
       <td>
         <button class="btn btn-outline btn-sm view-order-btn" data-id="${o.id}">View</button>
       </td>
@@ -46,7 +46,7 @@ function renderOrdersTable() {
 }
 
 function openOrderModal(id) {
-  const order = novaAllAdminOrders().find((o) => o.id === id);
+  const order = barazAllAdminOrders().find((o) => o.id === id);
   if (!order) return;
 
   openModal(`
@@ -59,7 +59,7 @@ function openOrderModal(id) {
     <div class="field" style="margin-top:20px">
       <label>Update Status</label>
       <select class="select" id="modal-status-select">
-        ${NOVA_ORDER_STATUS_OPTIONS.map((s) => `<option ${s === order.status ? 'selected' : ''}>${s}</option>`).join('')}
+        ${BARAZ_ORDER_STATUS_OPTIONS.map((s) => `<option ${s === order.status ? 'selected' : ''}>${s}</option>`).join('')}
       </select>
     </div>
     <button class="btn btn-primary btn-block" id="save-status-btn" style="margin-top:16px">Save Status</button>
@@ -67,7 +67,7 @@ function openOrderModal(id) {
 
   document.getElementById('save-status-btn').addEventListener('click', () => {
     const status = document.getElementById('modal-status-select').value;
-    novaUpdateAdminOrderStatus(order.id, status);
+    barazUpdateAdminOrderStatus(order.id, status);
     closeModal();
     showToast('Order status updated');
     renderOrdersTable();

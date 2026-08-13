@@ -1,4 +1,4 @@
-const NOVA_ACCOUNT_LINKS = [
+const BARAZ_ACCOUNT_LINKS = [
   { id: 'profile', label: 'Profile', href: 'account.html' },
   { id: 'orders', label: 'Orders', href: 'account-orders.html' },
   { id: 'wishlist', label: 'Wishlist', href: 'account-wishlist.html' },
@@ -11,14 +11,14 @@ function renderAccountSidebar(active) {
   if (!root) return;
   root.innerHTML = `
     <nav class="account-nav card">
-      ${NOVA_ACCOUNT_LINKS.map((l) => `
+      ${BARAZ_ACCOUNT_LINKS.map((l) => `
         <a href="${l.href}" class="account-nav-link${l.id === active ? ' active' : ''}">${l.label}</a>
       `).join('')}
       <button class="account-nav-link account-logout" id="account-logout-btn">Logout</button>
     </nav>
   `;
   document.getElementById('account-logout-btn').addEventListener('click', () => {
-    NovaStore.logout();
+    BarazStore.logout();
     showToast('Logged out');
     window.location.href = 'index.html';
   });

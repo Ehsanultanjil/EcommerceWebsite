@@ -1,8 +1,8 @@
 const PRICE_RANGES = [
-  { id: '0-50', label: '$0 – $50', min: 0, max: 50 },
-  { id: '50-100', label: '$50 – $100', min: 50, max: 100 },
-  { id: '100-200', label: '$100 – $200', min: 100, max: 200 },
-  { id: '200-plus', label: '$200+', min: 200, max: Infinity },
+  { id: '0-50', label: '৳0 – ৳5,000', min: 0, max: 5000 },
+  { id: '50-100', label: '৳5,000 – ৳10,000', min: 5000, max: 10000 },
+  { id: '100-200', label: '৳10,000 – ৳20,000', min: 10000, max: 20000 },
+  { id: '200-plus', label: '৳20,000+', min: 20000, max: Infinity },
 ];
 
 const shopState = {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function getFilteredProducts() {
   const filterParam = qs('filter');
-  let list = NOVA_PRODUCTS.slice();
+  let list = BARAZ_PRODUCTS.slice();
 
   if (filterParam === 'new') list = list.filter((p) => p.isNew);
   if (filterParam === 'deals') list = list.filter((p) => p.originalPrice);
@@ -61,7 +61,7 @@ function applyFilters() {
   const count = document.getElementById('results-count');
 
   count.textContent = `${list.length} Product${list.length === 1 ? '' : 's'}`;
-  grid.innerHTML = list.map(novaProductCardHtml).join('');
+  grid.innerHTML = list.map(barazProductCardHtml).join('');
   grid.hidden = list.length === 0;
   empty.hidden = list.length !== 0;
 }
@@ -70,7 +70,7 @@ function filterFormHtml() {
   return `
     <div class="filter-group">
       <div class="filter-group-title">Category</div>
-      ${NOVA_CATEGORIES.map((cat) => `
+      ${BARAZ_CATEGORIES.map((cat) => `
         <label class="checkbox-row">
           <input type="checkbox" class="filter-category" value="${cat.id}" ${shopState.categories.includes(cat.id) ? 'checked' : ''} />
           ${cat.name}
@@ -132,7 +132,7 @@ function bindToolbar() {
       <div class="filter-modal-body">${filterFormHtml()}</div>
       <button class="btn btn-primary btn-block" id="mobile-filter-apply">View results</button>
     `);
-    const overlay = document.getElementById('nova-modal');
+    const overlay = document.getElementById('baraz-modal');
     bindFilterInputs(overlay, () => renderDesktopFilters());
     overlay.querySelector('#mobile-filter-apply').addEventListener('click', closeModal);
   });

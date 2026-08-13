@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNavbar('checkout');
   renderFooter();
 
-  const cart = NovaStore.getCart();
+  const cart = BarazStore.getCart();
   if (cart.length === 0) {
     window.location.href = 'cart.html';
     return;
@@ -18,16 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function getCartLines() {
-  return NovaStore.getCart()
-    .map((item) => ({ item, product: novaGetProduct(item.id) }))
+  return BarazStore.getCart()
+    .map((item) => ({ item, product: barazGetProduct(item.id) }))
     .filter((l) => l.product);
 }
 
 function computeTotals() {
   const lines = getCartLines();
   const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.item.qty, 0);
-  const shipping = subtotal > 150 ? 0 : 10;
-  const discount = window.__novaCartDiscount || 0;
+  const shipping = subtotal > 15000 ? 0 : 1000;
+  const discount = window.__barazCartDiscount || 0;
   return { subtotal, shipping, discount, total: subtotal + shipping - discount };
 }
 
@@ -62,7 +62,7 @@ function placeOrder(form) {
   const data = new FormData(form);
   const t = computeTotals();
   const lines = getCartLines();
-  const orderId = 'NV-' + Math.floor(10000 + Math.random() * 90000);
+  const orderId = 'BZ-' + Math.floor(10000 + Math.random() * 90000);
   const today = new Date('2026-08-14');
   const etaStart = new Date(today);
   etaStart.setDate(today.getDate() + 4);
@@ -90,9 +90,9 @@ function placeOrder(form) {
     payment: data.get('payment'),
   };
 
-  NovaStore.placeOrder(order);
-  NovaStore.login(data.get('fullName'), data.get('email'));
-  NovaStore.clearCart();
-  window.__novaCartDiscount = 0;
+  BarazStore.placeOrder(order);
+  BarazStore.login(data.get('fullName'), data.get('email'));
+  BarazStore.clearCart();
+  window.__barazCartDiscount = 0;
   window.location.href = `order-confirmation.html?order=${orderId}`;
 }

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderAddresses() {
-  const addresses = NovaStore.getAddresses();
+  const addresses = BarazStore.getAddresses();
   const content = document.getElementById('account-content');
 
   content.innerHTML = `
@@ -44,7 +44,7 @@ function renderAddresses() {
   document.getElementById('address-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
-    NovaStore.addAddress({
+    BarazStore.addAddress({
       name: data.get('name'),
       line1: data.get('line1'),
       city: data.get('city'),
@@ -57,7 +57,7 @@ function renderAddresses() {
 
   content.querySelectorAll('.remove-address-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
-      NovaStore.removeAddress(Number(btn.dataset.index));
+      BarazStore.removeAddress(Number(btn.dataset.index));
       renderAddresses();
     });
   });

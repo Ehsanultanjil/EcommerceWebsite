@@ -1,14 +1,14 @@
 /* localStorage-backed state: cart, wishlist, session, orders, admin product overlay */
-const NOVA_KEYS = {
-  cart: 'nova_cart',
-  wishlist: 'nova_wishlist',
-  session: 'nova_session',
-  orders: 'nova_orders',
-  addresses: 'nova_addresses',
-  adminProducts: 'nova_admin_products',
+const BARAZ_KEYS = {
+  cart: 'baraz_cart',
+  wishlist: 'baraz_wishlist',
+  session: 'baraz_session',
+  orders: 'baraz_orders',
+  addresses: 'baraz_addresses',
+  adminProducts: 'baraz_admin_products',
 };
 
-function novaRead(key, fallback) {
+function barazRead(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : fallback;
@@ -17,115 +17,115 @@ function novaRead(key, fallback) {
   }
 }
 
-function novaWrite(key, value) {
+function barazWrite(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-const NovaStore = {
+const BarazStore = {
   /* ---------- Cart: [{ id, qty, color }] ---------- */
   getCart() {
-    return novaRead(NOVA_KEYS.cart, []);
+    return barazRead(BARAZ_KEYS.cart, []);
   },
   setCart(cart) {
-    novaWrite(NOVA_KEYS.cart, cart);
-    document.dispatchEvent(new CustomEvent('nova:cart-change'));
+    barazWrite(BARAZ_KEYS.cart, cart);
+    document.dispatchEvent(new CustomEvent('baraz:cart-change'));
   },
   addToCart(id, qty = 1, color = null) {
-    const cart = NovaStore.getCart();
+    const cart = BarazStore.getCart();
     const existing = cart.find((item) => item.id === id && item.color === color);
     if (existing) {
       existing.qty += qty;
     } else {
       cart.push({ id, qty, color });
     }
-    NovaStore.setCart(cart);
+    BarazStore.setCart(cart);
   },
   updateCartQty(id, color, qty) {
-    let cart = NovaStore.getCart();
+    let cart = BarazStore.getCart();
     if (qty <= 0) {
       cart = cart.filter((item) => !(item.id === id && item.color === color));
     } else {
       const item = cart.find((i) => i.id === id && i.color === color);
       if (item) item.qty = qty;
     }
-    NovaStore.setCart(cart);
+    BarazStore.setCart(cart);
   },
   removeFromCart(id, color) {
-    NovaStore.setCart(NovaStore.getCart().filter((i) => !(i.id === id && i.color === color)));
+    BarazStore.setCart(BarazStore.getCart().filter((i) => !(i.id === id && i.color === color)));
   },
   clearCart() {
-    NovaStore.setCart([]);
+    BarazStore.setCart([]);
   },
   cartCount() {
-    return NovaStore.getCart().reduce((sum, i) => sum + i.qty, 0);
+    return BarazStore.getCart().reduce((sum, i) => sum + i.qty, 0);
   },
 
   /* ---------- Wishlist: [id, ...] ---------- */
   getWishlist() {
-    return novaRead(NOVA_KEYS.wishlist, []);
+    return barazRead(BARAZ_KEYS.wishlist, []);
   },
   toggleWishlist(id) {
-    let list = NovaStore.getWishlist();
+    let list = BarazStore.getWishlist();
     if (list.includes(id)) {
       list = list.filter((x) => x !== id);
     } else {
       list.push(id);
     }
-    novaWrite(NOVA_KEYS.wishlist, list);
-    document.dispatchEvent(new CustomEvent('nova:wishlist-change'));
+    barazWrite(BARAZ_KEYS.wishlist, list);
+    document.dispatchEvent(new CustomEvent('baraz:wishlist-change'));
     return list.includes(id);
   },
   isWishlisted(id) {
-    return NovaStore.getWishlist().includes(id);
+    return BarazStore.getWishlist().includes(id);
   },
 
   /* ---------- Session ---------- */
   getSession() {
-    return novaRead(NOVA_KEYS.session, null);
+    return barazRead(BARAZ_KEYS.session, null);
   },
   login(name, email) {
-    novaWrite(NOVA_KEYS.session, { name, email });
+    barazWrite(BARAZ_KEYS.session, { name, email });
   },
   logout() {
-    localStorage.removeItem(NOVA_KEYS.session);
+    localStorage.removeItem(BARAZ_KEYS.session);
   },
   isLoggedIn() {
-    return !!NovaStore.getSession();
+    return !!BarazStore.getSession();
   },
 
   /* ---------- Orders: seeded + user-placed ---------- */
   getOrders() {
-    return novaRead(NOVA_KEYS.orders, null);
+    return barazRead(BARAZ_KEYS.orders, null);
   },
   seedOrders(orders) {
-    if (NovaStore.getOrders() === null) novaWrite(NOVA_KEYS.orders, orders);
+    if (BarazStore.getOrders() === null) barazWrite(BARAZ_KEYS.orders, orders);
   },
   placeOrder(order) {
-    const orders = NovaStore.getOrders() || [];
+    const orders = BarazStore.getOrders() || [];
     orders.unshift(order);
-    novaWrite(NOVA_KEYS.orders, orders);
+    barazWrite(BARAZ_KEYS.orders, orders);
   },
 
   /* ---------- Addresses ---------- */
   getAddresses() {
-    return novaRead(NOVA_KEYS.addresses, []);
+    return barazRead(BARAZ_KEYS.addresses, []);
   },
   addAddress(addr) {
-    const list = NovaStore.getAddresses();
+    const list = BarazStore.getAddresses();
     list.push(addr);
-    novaWrite(NOVA_KEYS.addresses, list);
+    barazWrite(BARAZ_KEYS.addresses, list);
   },
   removeAddress(index) {
-    const list = NovaStore.getAddresses();
+    const list = BarazStore.getAddresses();
     list.splice(index, 1);
-    novaWrite(NOVA_KEYS.addresses, list);
+    barazWrite(BARAZ_KEYS.addresses, list);
   },
 
   /* ---------- Admin product overlay (edits on top of static catalog) ---------- */
   getAdminProducts() {
-    return novaRead(NOVA_KEYS.adminProducts, null);
+    return barazRead(BARAZ_KEYS.adminProducts, null);
   },
   saveAdminProducts(list) {
-    novaWrite(NOVA_KEYS.adminProducts, list);
+    barazWrite(BARAZ_KEYS.adminProducts, list);
   },
 };

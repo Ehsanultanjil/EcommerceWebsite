@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   renderNavbar('account');
   renderFooter();
   renderAccountSidebar('orders');
-  NovaStore.seedOrders(NOVA_SEED_ORDERS);
+  BarazStore.seedOrders(BARAZ_SEED_ORDERS);
 
-  const orders = NovaStore.getOrders() || [];
+  const orders = BarazStore.getOrders() || [];
   const content = document.getElementById('account-content');
 
   if (orders.length === 0) {
@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <span>${formatCurrency(order.total)}</span>
       </div>
       <div class="order-status-track">
-        ${NOVA_ORDER_STATUS_STEPS.map((step, i) => {
-          const done = i <= NOVA_ORDER_STATUS_STEPS.indexOf(order.status);
+        ${BARAZ_ORDER_STATUS_STEPS.map((step, i) => {
+          const done = i <= BARAZ_ORDER_STATUS_STEPS.indexOf(order.status);
           return `
             ${i > 0 ? '<div class="order-status-line"></div>' : ''}
             <div class="order-status-step${done ? ' done' : ''}">
@@ -58,11 +58,11 @@ function statusBadgeClass(status) {
 }
 
 function showOrderDetail(orderId) {
-  const orders = NovaStore.getOrders() || [];
+  const orders = BarazStore.getOrders() || [];
   const order = orders.find((o) => o.id === orderId);
   if (!order) return;
 
-  const lines = order.items.map((i) => ({ item: i, product: novaGetProduct(i.productId) })).filter((l) => l.product);
+  const lines = order.items.map((i) => ({ item: i, product: barazGetProduct(i.productId) })).filter((l) => l.product);
 
   openModal(`
     <h3>Order #${order.id}</h3>

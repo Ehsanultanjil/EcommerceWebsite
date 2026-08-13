@@ -3,12 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFooter();
   renderAccountSidebar('wishlist');
   renderWishlist();
-  document.addEventListener('nova:wishlist-change', renderWishlist);
+  document.addEventListener('baraz:wishlist-change', renderWishlist);
 });
 
 function renderWishlist() {
-  const ids = NovaStore.getWishlist();
-  const products = ids.map(novaGetProduct).filter(Boolean);
+  const ids = BarazStore.getWishlist();
+  const products = ids.map(barazGetProduct).filter(Boolean);
   const content = document.getElementById('account-content');
 
   if (products.length === 0) {
@@ -22,5 +22,5 @@ function renderWishlist() {
     return;
   }
 
-  content.innerHTML = `<div class="grid-4">${products.map(novaProductCardHtml).join('')}</div>`;
+  content.innerHTML = `<div class="grid-4">${products.map(barazProductCardHtml).join('')}</div>`;
 }
