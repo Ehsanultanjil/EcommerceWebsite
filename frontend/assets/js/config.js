@@ -3,5 +3,5 @@
 const BARAZ_CONFIG = {
   SUPABASE_URL: 'https://womdgicjncendsgbbfnf.supabase.co',
   SUPABASE_ANON_KEY: 'sb_publishable_rg9R-lYPqBMCj4CQKd-huw_CP8oY6LS',
-  API_BASE_URL: 'http://localhost:8080/api',
+  API_BASE_URL: 'https://baraz-backend.onrender.com/api',
 };
