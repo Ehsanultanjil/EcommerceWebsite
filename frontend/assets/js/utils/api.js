@@ -8,10 +8,21 @@ class ApiError extends Error {
   }
 }
 
+// Render's free tier spins the backend down when idle — the first request after
+// that can take up to ~a minute. Warn once per page load so a slow first hit
+// doesn't look like the page is just broken.
+let barazColdStartWarned = false;
+
 async function apiRequest(method, path, body) {
   const token = await barazGetAccessToken();
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
+
+  const coldStartTimer = setTimeout(() => {
+    if (barazColdStartWarned) return;
+    barazColdStartWarned = true;
+    showToast('Waking up the server — first load can take up to a minute…');
+  }, 4000);
 
   let response;
   try {
@@ -21,8 +32,10 @@ async function apiRequest(method, path, body) {
       body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   } catch (networkError) {
+    clearTimeout(coldStartTimer);
     throw new ApiError(0, 'Could not reach the server. Check your connection and try again.');
   }
+  clearTimeout(coldStartTimer);
 
   if (response.status === 204) return null;
 
