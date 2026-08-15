@@ -1,11 +1,9 @@
-/* localStorage-backed state: cart, wishlist, session, orders, admin product overlay */
+/* localStorage-backed state for the pieces that have no backend yet: wishlist and
+   saved addresses. Cart, session/auth, and orders are now real (Supabase Auth +
+   the Spring Boot API) — see utils/auth.js and utils/api.js. */
 const BARAZ_KEYS = {
-  cart: 'baraz_cart',
   wishlist: 'baraz_wishlist',
-  session: 'baraz_session',
-  orders: 'baraz_orders',
   addresses: 'baraz_addresses',
-  adminProducts: 'baraz_admin_products',
 };
 
 function barazRead(key, fallback) {
@@ -22,44 +20,6 @@ function barazWrite(key, value) {
 }
 
 const BarazStore = {
-  /* ---------- Cart: [{ id, qty, color }] ---------- */
-  getCart() {
-    return barazRead(BARAZ_KEYS.cart, []);
-  },
-  setCart(cart) {
-    barazWrite(BARAZ_KEYS.cart, cart);
-    document.dispatchEvent(new CustomEvent('baraz:cart-change'));
-  },
-  addToCart(id, qty = 1, color = null) {
-    const cart = BarazStore.getCart();
-    const existing = cart.find((item) => item.id === id && item.color === color);
-    if (existing) {
-      existing.qty += qty;
-    } else {
-      cart.push({ id, qty, color });
-    }
-    BarazStore.setCart(cart);
-  },
-  updateCartQty(id, color, qty) {
-    let cart = BarazStore.getCart();
-    if (qty <= 0) {
-      cart = cart.filter((item) => !(item.id === id && item.color === color));
-    } else {
-      const item = cart.find((i) => i.id === id && i.color === color);
-      if (item) item.qty = qty;
-    }
-    BarazStore.setCart(cart);
-  },
-  removeFromCart(id, color) {
-    BarazStore.setCart(BarazStore.getCart().filter((i) => !(i.id === id && i.color === color)));
-  },
-  clearCart() {
-    BarazStore.setCart([]);
-  },
-  cartCount() {
-    return BarazStore.getCart().reduce((sum, i) => sum + i.qty, 0);
-  },
-
   /* ---------- Wishlist: [id, ...] ---------- */
   getWishlist() {
     return barazRead(BARAZ_KEYS.wishlist, []);
@@ -79,33 +39,6 @@ const BarazStore = {
     return BarazStore.getWishlist().includes(id);
   },
 
-  /* ---------- Session ---------- */
-  getSession() {
-    return barazRead(BARAZ_KEYS.session, null);
-  },
-  login(name, email) {
-    barazWrite(BARAZ_KEYS.session, { name, email });
-  },
-  logout() {
-    localStorage.removeItem(BARAZ_KEYS.session);
-  },
-  isLoggedIn() {
-    return !!BarazStore.getSession();
-  },
-
-  /* ---------- Orders: seeded + user-placed ---------- */
-  getOrders() {
-    return barazRead(BARAZ_KEYS.orders, null);
-  },
-  seedOrders(orders) {
-    if (BarazStore.getOrders() === null) barazWrite(BARAZ_KEYS.orders, orders);
-  },
-  placeOrder(order) {
-    const orders = BarazStore.getOrders() || [];
-    orders.unshift(order);
-    barazWrite(BARAZ_KEYS.orders, orders);
-  },
-
   /* ---------- Addresses ---------- */
   getAddresses() {
     return barazRead(BARAZ_KEYS.addresses, []);
@@ -119,13 +52,5 @@ const BarazStore = {
     const list = BarazStore.getAddresses();
     list.splice(index, 1);
     barazWrite(BARAZ_KEYS.addresses, list);
-  },
-
-  /* ---------- Admin product overlay (edits on top of static catalog) ---------- */
-  getAdminProducts() {
-    return barazRead(BARAZ_KEYS.adminProducts, null);
-  },
-  saveAdminProducts(list) {
-    barazWrite(BARAZ_KEYS.adminProducts, list);
   },
 };

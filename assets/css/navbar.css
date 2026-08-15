@@ -8,6 +8,9 @@
   background: transparent;
   border-bottom: 1px solid transparent;
   transition: background var(--transition), border-color var(--transition), backdrop-filter var(--transition);
+  transform: translateZ(0);
+  will-change: transform;
+  isolation: isolate;
 }
 
 .navbar.scrolled {

@@ -41,15 +41,15 @@
         <section class="checkout-step">
           <div class="checkout-step-title"><span class="step-number">02</span> Payment</div>
           <label class="radio-row payment-option">
-            <input type="radio" name="payment" value="Cash on Delivery" checked />
+            <input type="radio" name="payment" value="CASH_ON_DELIVERY" checked />
             Cash on Delivery
           </label>
           <label class="radio-row payment-option">
-            <input type="radio" name="payment" value="Credit / Debit Card" />
+            <input type="radio" name="payment" value="CARD" />
             Credit / Debit Card
           </label>
           <label class="radio-row payment-option">
-            <input type="radio" name="payment" value="Mobile Payment" />
+            <input type="radio" name="payment" value="MOBILE_PAYMENT" />
             Mobile Payment
           </label>
         </section>
@@ -67,11 +67,13 @@
 
 <div id="footer-root"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="assets/js/config.js"></script>
 <script src="assets/js/utils/storage.js"></script>
 <script src="assets/js/utils/format.js"></script>
-<script src="assets/js/data/products.js"></script>
-<script src="assets/js/data/categories.js"></script>
+<script src="assets/js/utils/auth.js"></script>
 <script src="assets/js/components/toast.js"></script>
+<script src="assets/js/utils/api.js"></script>
 <script src="assets/js/components/modal.js"></script>
 <script src="assets/js/components/navbar.js"></script>
 <script src="assets/js/components/search.js"></script>

@@ -1,6 +1,7 @@
 let customerSearch = '';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await barazRequireAdmin())) return;
   renderAdminSidebar('customers');
   document.getElementById('customer-search').addEventListener('input', (e) => {
     customerSearch = e.target.value.toLowerCase();

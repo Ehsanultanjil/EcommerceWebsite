@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.local
+supabase/.branches
+supabase/.temp
+
+# Spring Boot backend
+backend/target/
+backend/.env
+backend/.env.local
+*.class

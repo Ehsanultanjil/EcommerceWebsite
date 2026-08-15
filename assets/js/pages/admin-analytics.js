@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await barazRequireAdmin())) return;
   renderAdminSidebar('analytics');
 
   const totalRevenue = BARAZ_REVENUE_SERIES.reduce((a, b) => a + b, 0);
@@ -25,11 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('analytics-chart-root').innerHTML = barazLineChartSvg(BARAZ_REVENUE_SERIES, { height: 260 });
   document.getElementById('analytics-chart-labels').innerHTML = BARAZ_REVENUE_MONTHS.map((m) => `<span>${m}</span>`).join('');
 
-  const products = barazAllAdminProducts();
-  const categories = barazAllAdminCategories();
+  // Revenue/conversion above stay illustrative (no aggregate analytics endpoint exists
+  // on the backend) — but the category breakdown below uses the real catalog now that
+  // products/categories are connected, instead of the removed local fake data.
+  let products = [];
+  let categories = [];
+  try {
+    [products, categories] = await Promise.all([apiGet('/products'), apiGet('/categories')]);
+  } catch (e) {
+    document.getElementById('category-breakdown').innerHTML = `<p class="text-secondary">Couldn't load category data.</p>`;
+    return;
+  }
+
   const breakdown = categories.map((c) => ({
     name: c.name,
-    count: products.filter((p) => p.category === c.id).length,
+    count: products.filter((p) => p.category && p.category.slug === c.slug).length,
   }));
   const maxCount = Math.max(...breakdown.map((b) => b.count), 1);
 

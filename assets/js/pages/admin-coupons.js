@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await barazRequireAdmin())) return;
   renderAdminSidebar('coupons');
   document.getElementById('add-coupon-btn').addEventListener('click', () => openCouponModal());
   renderCouponsTable();

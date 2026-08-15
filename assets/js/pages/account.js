@@ -1,10 +1,10 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('account');
   renderFooter();
   renderAccountSidebar('profile');
 
-  const session = BarazStore.getSession();
   const content = document.getElementById('account-content');
+  const session = await barazGetSession();
 
   if (!session) {
     content.innerHTML = `
@@ -17,33 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  const initial = session.name.trim().charAt(0).toUpperCase();
+  let me;
+  try {
+    me = await apiGet('/auth/me');
+  } catch (e) {
+    if (e instanceof ApiError && e.status !== 401) {
+      content.innerHTML = `<p class="text-secondary">Couldn't load your profile — try refreshing.</p>`;
+    }
+    return;
+  }
+
+  const initial = (me.fullName || me.email).trim().charAt(0).toUpperCase();
 
   content.innerHTML = `
     <div class="profile-summary">
       <div class="profile-avatar">${initial}</div>
       <div>
-        <div class="profile-name">${session.name}</div>
-        <div class="text-secondary">${session.email}</div>
+        <div class="profile-name">${me.fullName || me.email}</div>
+        <div class="text-secondary">${me.email}</div>
       </div>
     </div>
     <h3>Profile Details</h3>
-    <form id="profile-form" class="auth-form">
+    <div class="auth-form">
       <div class="form-row">
-        <div class="field"><label>Full Name</label><input class="input" name="name" value="${session.name}" required /></div>
-        <div class="field"><label>Email</label><input class="input" type="email" name="email" value="${session.email}" required /></div>
+        <div class="field"><label>Full Name</label><input class="input" value="${me.fullName || ''}" disabled /></div>
+        <div class="field"><label>Email</label><input class="input" value="${me.email}" disabled /></div>
       </div>
-      <div class="field"><label>Phone</label><input class="input" name="phone" placeholder="+91 98765 43210" /></div>
-      <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
+      <div class="field"><label>Phone</label><input class="input" value="${me.phone || ''}" placeholder="Not set" disabled /></div>
+      <div class="field"><label>Account Type</label><input class="input" value="${me.role === 'ADMIN' ? 'Administrator' : 'Customer'}" disabled /></div>
+      <p class="text-secondary" style="margin-top:8px">Profile editing isn't available yet.</p>
+    </div>
   `;
-
-  document.getElementById('profile-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    BarazStore.login(data.get('name'), data.get('email'));
-    showToast('Profile updated');
-    document.querySelector('.profile-name').textContent = data.get('name');
-    document.querySelector('.profile-avatar').textContent = data.get('name').trim().charAt(0).toUpperCase();
-  });
 });

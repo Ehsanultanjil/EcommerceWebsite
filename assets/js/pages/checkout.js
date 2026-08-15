@@ -1,9 +1,26 @@
-document.addEventListener('DOMContentLoaded', () => {
+const CHECKOUT_FREE_SHIPPING_THRESHOLD = 15000;
+const CHECKOUT_STANDARD_SHIPPING_FEE = 1000;
+
+let checkoutCart = null;
+
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('checkout');
   renderFooter();
 
-  const cart = BarazStore.getCart();
-  if (cart.length === 0) {
+  const session = await barazGetSession();
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  try {
+    checkoutCart = await apiGet('/cart');
+  } catch (e) {
+    if (e instanceof ApiError && e.status !== 401) showToast("Couldn't load your cart");
+    return;
+  }
+
+  if (!checkoutCart.items.length) {
     window.location.href = 'cart.html';
     return;
   }
@@ -17,30 +34,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-function getCartLines() {
-  return BarazStore.getCart()
-    .map((item) => ({ item, product: barazGetProduct(item.id) }))
-    .filter((l) => l.product);
-}
-
 function computeTotals() {
-  const lines = getCartLines();
-  const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.item.qty, 0);
-  const shipping = subtotal > 15000 ? 0 : 1000;
-  const discount = window.__barazCartDiscount || 0;
-  return { subtotal, shipping, discount, total: subtotal + shipping - discount };
+  const subtotal = checkoutCart.subtotal;
+  const shipping = subtotal > CHECKOUT_FREE_SHIPPING_THRESHOLD ? 0 : CHECKOUT_STANDARD_SHIPPING_FEE;
+  return { subtotal, shipping, total: subtotal + shipping };
 }
 
 function renderReview() {
-  const lines = getCartLines();
-  document.getElementById('review-items').innerHTML = lines.map((l) => `
+  document.getElementById('review-items').innerHTML = checkoutCart.items.map((item) => `
     <div class="review-line">
-      <img src="${l.product.image}" alt="${l.product.name}" />
+      <img src="${item.productImageUrl}" alt="${item.productName}" />
       <div class="review-line-info">
-        <div class="review-line-name">${l.product.name}</div>
-        <div class="text-secondary">${l.item.color || ''} · Qty ${l.item.qty}</div>
+        <div class="review-line-name">${item.productName}</div>
+        <div class="text-secondary">Qty ${item.quantity}</div>
       </div>
-      <div class="review-line-price">${formatCurrency(l.product.price * l.item.qty)}</div>
+      <div class="review-line-price">${formatCurrency(item.lineTotal)}</div>
     </div>
   `).join('');
 }
@@ -51,48 +59,30 @@ function renderSummary() {
     <h3>Order Summary</h3>
     <div class="summary-row"><span>Subtotal</span><span>${formatCurrency(t.subtotal)}</span></div>
     <div class="summary-row"><span>Shipping</span><span>${t.shipping === 0 ? 'Free' : formatCurrency(t.shipping)}</span></div>
-    ${t.discount ? `<div class="summary-row"><span>Discount</span><span>-${formatCurrency(t.discount)}</span></div>` : ''}
     <div class="summary-divider"></div>
     <div class="summary-row summary-total"><span>Total</span><span>${formatCurrency(t.total)}</span></div>
-    <button type="submit" form="checkout-form" class="btn btn-primary btn-block">Place Order</button>
+    <button type="submit" form="checkout-form" class="btn btn-primary btn-block" id="place-order-btn">Place Order</button>
   `;
 }
 
-function placeOrder(form) {
+async function placeOrder(form) {
   const data = new FormData(form);
-  const t = computeTotals();
-  const lines = getCartLines();
-  const orderId = 'BZ-' + Math.floor(10000 + Math.random() * 90000);
-  const today = new Date('2026-08-14');
-  const etaStart = new Date(today);
-  etaStart.setDate(today.getDate() + 4);
-  const etaEnd = new Date(today);
-  etaEnd.setDate(today.getDate() + 6);
-  const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const btn = document.getElementById('place-order-btn');
+  btn.disabled = true;
+  btn.textContent = 'Placing order…';
 
-  const order = {
-    id: orderId,
-    date: today.toISOString().slice(0, 10),
-    status: 'Confirmed',
-    items: lines.map((l) => ({ productId: l.product.id, qty: l.item.qty, color: l.item.color })),
-    subtotal: t.subtotal,
-    shipping: t.shipping,
-    discount: t.discount,
-    total: t.total,
-    eta: `${fmt(etaStart)} – ${fmt(etaEnd)}`,
-    address: {
-      name: data.get('fullName'),
-      line1: data.get('address'),
-      city: data.get('city'),
-      postal: data.get('postal'),
-      phone: data.get('phone'),
-    },
-    payment: data.get('payment'),
-  };
-
-  BarazStore.placeOrder(order);
-  BarazStore.login(data.get('fullName'), data.get('email'));
-  BarazStore.clearCart();
-  window.__barazCartDiscount = 0;
-  window.location.href = `order-confirmation.html?order=${orderId}`;
+  try {
+    const order = await apiPost('/checkout', {
+      shippingName: data.get('fullName'),
+      shippingPhone: data.get('phone'),
+      shippingAddress: data.get('address'),
+      paymentMethod: data.get('payment'),
+    });
+    document.dispatchEvent(new CustomEvent('baraz:cart-change'));
+    window.location.href = `order-confirmation.html?id=${order.id}`;
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = 'Place Order';
+    if (e instanceof ApiError && e.status !== 401) showToast(e.message);
+  }
 }

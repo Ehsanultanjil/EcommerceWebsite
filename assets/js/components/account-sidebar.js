@@ -17,8 +17,8 @@ function renderAccountSidebar(active) {
       <button class="account-nav-link account-logout" id="account-logout-btn">Logout</button>
     </nav>
   `;
-  document.getElementById('account-logout-btn').addEventListener('click', () => {
-    BarazStore.logout();
+  document.getElementById('account-logout-btn').addEventListener('click', async () => {
+    await barazSignOut();
     showToast('Logged out');
     window.location.href = 'index.html';
   });

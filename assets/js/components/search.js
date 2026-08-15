@@ -1,4 +1,6 @@
 const BARAZ_POPULAR_SEARCHES = ['Headphones', 'Smart watches', 'Backpacks', 'Sneakers'];
+let barazSearchSeq = 0;
+let barazSearchDebounce = null;
 
 function initSearch() {
   const toggle = document.getElementById('nav-search-toggle');
@@ -43,10 +45,25 @@ function initSearch() {
     });
   }
 
-  function renderResults(term) {
-    const q = term.trim().toLowerCase();
+  async function renderResults(term) {
+    const q = term.trim();
     if (!q) return renderDefault();
-    const matches = BARAZ_PRODUCTS.filter((p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)).slice(0, 6);
+
+    const seq = ++barazSearchSeq;
+    results.innerHTML = `<div class="search-section-label">Searching…</div>`;
+
+    let matches;
+    try {
+      matches = await apiGet(`/products?search=${encodeURIComponent(q)}`);
+    } catch (e) {
+      if (seq === barazSearchSeq) {
+        results.innerHTML = `<div class="search-section-label">Couldn't load results — try again</div>`;
+      }
+      return;
+    }
+    if (seq !== barazSearchSeq) return; // a newer keystroke already superseded this response
+
+    matches = matches.slice(0, 6);
     if (matches.length === 0) {
       results.innerHTML = `<div class="search-section-label">No results for "${term}"</div>`;
       return;
@@ -55,10 +72,10 @@ function initSearch() {
       <div class="search-section-label">Search results</div>
       ${matches.map((p) => `
         <a href="product.html?id=${p.id}" class="search-result-item">
-          <img src="${p.image}" alt="${p.name}" />
+          <img src="${p.imageUrl}" alt="${p.name}" />
           <div>
             <div class="search-result-name">${p.name}</div>
-            <div class="search-result-category">${capitalize(p.category)}</div>
+            <div class="search-result-category">${p.category ? p.category.name : ''}</div>
           </div>
           <div class="search-result-price">${formatCurrency(p.price)}</div>
         </a>
@@ -66,7 +83,11 @@ function initSearch() {
     `;
   }
 
-  input.addEventListener('input', () => renderResults(input.value));
+  input.addEventListener('input', () => {
+    clearTimeout(barazSearchDebounce);
+    const value = input.value;
+    barazSearchDebounce = setTimeout(() => renderResults(value), 250);
+  });
 }
 
 function capitalize(str) {

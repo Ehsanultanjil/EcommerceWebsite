@@ -1,17 +1,27 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await barazRequireAdmin())) return;
   renderAdminSidebar('categories');
   document.getElementById('add-category-btn').addEventListener('click', () => openCategoryModal());
   renderCategoriesTable();
 });
 
-function renderCategoriesTable() {
+async function renderCategoriesTable() {
   const categories = barazAllAdminCategories();
-  const products = barazAllAdminProducts();
+
+  // Category CRUD itself has no backend yet (out of scope) — but the product count
+  // shown per row should reflect real catalog data now that products are connected,
+  // not the removed local fake catalog.
+  let products = [];
+  try {
+    products = await apiGet('/products');
+  } catch (e) {
+    // leave counts at 0 if the API is unreachable
+  }
 
   document.getElementById('categories-count-label').textContent = `${categories.length} categories`;
 
   document.getElementById('categories-table-body').innerHTML = categories.map((c) => {
-    const count = products.filter((p) => p.category === c.id).length;
+    const count = products.filter((p) => p.category && p.category.slug === c.id).length;
     return `
       <tr>
         <td>

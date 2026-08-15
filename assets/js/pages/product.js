@@ -5,20 +5,51 @@ const BARAZ_SAMPLE_REVIEWS = [
 ];
 
 let currentProduct = null;
-let selectedColor = null;
 let selectedQty = 1;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('product');
   renderFooter();
 
   const id = qs('id');
-  currentProduct = barazGetProduct(id) || BARAZ_PRODUCTS[0];
-  selectedColor = currentProduct.colors[0].name;
+  const root = document.getElementById('product-root');
+  root.innerHTML = `<p class="text-secondary" style="padding:48px 0">Loading product…</p>`;
+
+  if (!id) {
+    root.innerHTML = notFoundHtml();
+    return;
+  }
+
+  try {
+    currentProduct = await apiGet(`/products/${id}`);
+  } catch (e) {
+    root.innerHTML = e instanceof ApiError && e.status === 404 ? notFoundHtml() : errorHtml();
+    return;
+  }
 
   renderProduct();
   renderRelated();
 });
+
+function notFoundHtml() {
+  return `
+    <div class="empty-state">
+      <h3>Product not found</h3>
+      <p>This item may have been removed.</p>
+      <a href="shop.html" class="btn btn-primary">Back to Shop</a>
+    </div>
+  `;
+}
+
+function errorHtml() {
+  return `
+    <div class="empty-state">
+      <h3>Couldn't load this product</h3>
+      <p>Something went wrong — try refreshing.</p>
+      <a href="shop.html" class="btn btn-primary">Back to Shop</a>
+    </div>
+  `;
+}
 
 function renderProduct() {
   const p = currentProduct;
@@ -26,28 +57,15 @@ function renderProduct() {
   root.innerHTML = `
     <div class="product-detail">
       <div class="product-detail-media">
-        <img src="${p.image}" alt="${p.name}" />
+        <img src="${p.imageUrl}" alt="${p.name}" />
       </div>
       <div class="product-detail-info">
-        <a href="shop.html?category=${p.category}" class="eyebrow">${capitalize(p.category)}</a>
+        <a href="shop.html?category=${p.category ? p.category.slug : ''}" class="eyebrow">${p.category ? p.category.name : ''}</a>
         <h1>${p.name}</h1>
-        <div class="product-rating">
-          <span class="stars">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5 - Math.round(p.rating))}</span>
-          <span class="text-secondary">${p.rating} (${p.reviews})</span>
-        </div>
         <div class="product-detail-price">
-          ${p.originalPrice ? `<span class="original">${formatCurrency(p.originalPrice)}</span>` : ''}${formatCurrency(p.price)}
+          ${p.comparePrice ? `<span class="original">${formatCurrency(p.comparePrice)}</span>` : ''}${formatCurrency(p.price)}
         </div>
-        <p class="product-detail-desc text-secondary">${p.desc}</p>
-
-        <div class="option-group">
-          <div class="option-label">Color <span id="selected-color-label">${selectedColor}</span></div>
-          <div class="swatch-row" id="color-swatches">
-            ${p.colors.map((c) => `
-              <button class="swatch${c.name === selectedColor ? ' active' : ''}" style="background:${c.hex}" data-color="${c.name}" aria-label="${c.name}"></button>
-            `).join('')}
-          </div>
-        </div>
+        <p class="product-detail-desc text-secondary">${p.description || ''}</p>
 
         <div class="option-group">
           <div class="option-label">Quantity</div>
@@ -56,10 +74,11 @@ function renderProduct() {
             <span id="qty-value">1</span>
             <button id="qty-plus">+</button>
           </div>
+          ${p.stock <= 0 ? '<p class="text-secondary" style="margin-top:8px">Out of stock</p>' : ''}
         </div>
 
         <div class="product-actions">
-          <button class="btn btn-primary btn-block" id="add-to-cart-btn">Add to Cart</button>
+          <button class="btn btn-primary btn-block" id="add-to-cart-btn" ${p.stock <= 0 ? 'disabled' : ''}>Add to Cart</button>
           <button class="btn btn-secondary btn-block" id="add-to-wishlist-btn">
             ${BARAZ_ICONS.heart} Add to Wishlist
           </button>
@@ -74,12 +93,10 @@ function renderProduct() {
         <button class="tab" data-tab="reviews">Reviews</button>
       </div>
       <div class="tab-panel active" id="tab-description">
-        <p class="text-secondary">${p.desc}</p>
+        <p class="text-secondary">${p.description || 'No description available.'}</p>
       </div>
       <div class="tab-panel" id="tab-specs">
-        <table class="specs-table">
-          ${Object.entries(p.specs).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
-        </table>
+        <p class="text-secondary">No specifications listed for this product.</p>
       </div>
       <div class="tab-panel" id="tab-reviews">
         ${BARAZ_SAMPLE_REVIEWS.map((r) => `
@@ -95,14 +112,6 @@ function renderProduct() {
     </div>
   `;
 
-  document.querySelectorAll('.swatch').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      selectedColor = btn.dataset.color;
-      document.getElementById('selected-color-label').textContent = selectedColor;
-      document.querySelectorAll('.swatch').forEach((s) => s.classList.toggle('active', s === btn));
-    });
-  });
-
   selectedQty = 1;
   document.getElementById('qty-minus').addEventListener('click', () => {
     selectedQty = Math.max(1, selectedQty - 1);
@@ -113,9 +122,19 @@ function renderProduct() {
     document.getElementById('qty-value').textContent = selectedQty;
   });
 
-  document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-    BarazStore.addToCart(p.id, selectedQty, selectedColor);
-    showToast(`${p.name} added to cart`);
+  document.getElementById('add-to-cart-btn').addEventListener('click', async () => {
+    const session = await barazGetSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+    try {
+      await apiPost('/cart/items', { productId: p.id, quantity: selectedQty });
+      showToast(`${p.name} added to cart`);
+      document.dispatchEvent(new CustomEvent('baraz:cart-change'));
+    } catch (e) {
+      if (e instanceof ApiError && e.status !== 401) showToast(e.message);
+    }
   });
 
   const wishlistBtn = document.getElementById('add-to-wishlist-btn');
@@ -136,7 +155,17 @@ function renderProduct() {
   });
 }
 
-function renderRelated() {
-  const related = barazRelatedProducts(currentProduct, 4);
-  document.getElementById('related-grid').innerHTML = related.map(barazProductCardHtml).join('');
+async function renderRelated() {
+  const grid = document.getElementById('related-grid');
+  if (!currentProduct.category) {
+    grid.innerHTML = '';
+    return;
+  }
+  try {
+    const categoryProducts = await apiGet(`/products/category/${currentProduct.category.id}`);
+    const related = categoryProducts.filter((p) => p.id !== currentProduct.id).slice(0, 4);
+    grid.innerHTML = related.map(barazProductCardHtml).join('');
+  } catch (e) {
+    grid.innerHTML = '';
+  }
 }

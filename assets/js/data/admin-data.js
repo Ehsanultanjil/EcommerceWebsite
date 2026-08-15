@@ -1,4 +1,8 @@
-/* Mock data scoped to the admin panel — separate from the single-user customer order history. */
+/* Mock data for admin sections that have no backend yet (out of scope for the API
+   connection): dashboard revenue/order stats, customers, coupons, and category CRUD.
+   Products and order status ARE connected — see pages/admin-products.js,
+   pages/admin-product-edit.js, pages/admin-orders.js, which talk to the real API
+   directly and no longer use this file. */
 
 const BARAZ_ADMIN_ORDERS = [
   { id: 'BZ10284', customer: 'Swapnil Kumar', email: 'swapnil@example.com', date: '2026-08-14', items: 2, total: 30200, status: 'Processing', payment: 'Cash on Delivery' },
@@ -39,53 +43,14 @@ function barazAdminOrderStatusClass(status) {
   return 'badge-accent';
 }
 
-/* ---------- Admin product overlay: edits persisted in localStorage on top of the static catalog ---------- */
-function barazAllAdminProducts() {
-  return BarazStore.getAdminProducts() || BARAZ_PRODUCTS.map((p) => ({ ...p }));
-}
-
-function barazAdminStock(product) {
-  return 12 + ((product.id * 37) % 70);
-}
-
-function barazSaveAdminProduct(product) {
-  const list = barazAllAdminProducts();
-  const idx = list.findIndex((p) => p.id === product.id);
-  if (idx >= 0) {
-    list[idx] = product;
-  } else {
-    list.push(product);
-  }
-  BarazStore.saveAdminProducts(list);
-}
-
-function barazDeleteAdminProduct(id) {
-  const list = barazAllAdminProducts().filter((p) => p.id !== id);
-  BarazStore.saveAdminProducts(list);
-}
-
-function barazNextAdminProductId() {
-  const list = barazAllAdminProducts();
-  return list.reduce((max, p) => Math.max(max, p.id), 0) + 1;
-}
-
-/* ---------- Admin order status overlay ---------- */
-function barazAllAdminOrders() {
-  const overlay = barazRead('baraz_admin_orders', null);
-  if (overlay) return overlay;
-  return BARAZ_ADMIN_ORDERS.map((o) => ({ ...o }));
-}
-
-function barazUpdateAdminOrderStatus(id, status) {
-  const list = barazAllAdminOrders();
-  const order = list.find((o) => o.id === id);
-  if (order) order.status = status;
-  localStorage.setItem('baraz_admin_orders', JSON.stringify(list));
-}
-
-/* ---------- Admin category overlay ---------- */
+/* ---------- Admin category overlay (categories CRUD has no backend yet) ---------- */
 function barazAllAdminCategories() {
-  return barazRead('baraz_admin_categories', null) || BARAZ_CATEGORIES.map((c) => ({ ...c }));
+  return barazRead('baraz_admin_categories', null) || [
+    { id: 'electronics', name: 'Electronics', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=700&h=860&fit=crop&q=80' },
+    { id: 'lifestyle', name: 'Lifestyle', image: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=700&h=860&fit=crop&q=80' },
+    { id: 'fashion', name: 'Fashion', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=700&h=860&fit=crop&q=80' },
+    { id: 'accessories', name: 'Accessories', image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=700&h=860&fit=crop&q=80' },
+  ];
 }
 
 function barazSaveAdminCategory(category) {
@@ -100,7 +65,7 @@ function barazDeleteAdminCategory(id) {
   localStorage.setItem('baraz_admin_categories', JSON.stringify(list));
 }
 
-/* ---------- Admin coupon overlay ---------- */
+/* ---------- Admin coupon overlay (coupons have no backend yet) ---------- */
 function barazAllAdminCoupons() {
   return barazRead('baraz_admin_coupons', null) || BARAZ_ADMIN_COUPONS.map((c) => ({ ...c }));
 }

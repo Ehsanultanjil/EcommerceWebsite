@@ -11,14 +11,25 @@ const shopState = {
   sort: 'featured',
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+let allProducts = [];
+let allCategories = [];
+
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('shop');
   renderFooter();
 
   const initialCategory = qs('category');
   if (initialCategory) shopState.categories.push(initialCategory);
-  const filterParam = qs('filter');
-  if (filterParam === 'deals') shopState.sort = 'featured';
+
+  const grid = document.getElementById('shop-grid');
+  grid.innerHTML = `<p class="text-secondary">Loading products…</p>`;
+
+  try {
+    [allProducts, allCategories] = await Promise.all([apiGet('/products'), apiGet('/categories')]);
+  } catch (e) {
+    grid.innerHTML = `<p class="text-secondary">Couldn't load products right now — try refreshing.</p>`;
+    return;
+  }
 
   renderDesktopFilters();
   bindToolbar();
@@ -27,13 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function getFilteredProducts() {
   const filterParam = qs('filter');
-  let list = BARAZ_PRODUCTS.slice();
+  let list = allProducts.slice();
 
   if (filterParam === 'new') list = list.filter((p) => p.isNew);
-  if (filterParam === 'deals') list = list.filter((p) => p.originalPrice);
+  if (filterParam === 'deals') list = list.filter((p) => p.comparePrice);
 
   if (shopState.categories.length) {
-    list = list.filter((p) => shopState.categories.includes(p.category));
+    list = list.filter((p) => p.category && shopState.categories.includes(p.category.slug));
   }
   if (shopState.price) {
     const range = PRICE_RANGES.find((r) => r.id === shopState.price);
@@ -70,9 +81,9 @@ function filterFormHtml() {
   return `
     <div class="filter-group">
       <div class="filter-group-title">Category</div>
-      ${BARAZ_CATEGORIES.map((cat) => `
+      ${allCategories.map((cat) => `
         <label class="checkbox-row">
-          <input type="checkbox" class="filter-category" value="${cat.id}" ${shopState.categories.includes(cat.id) ? 'checked' : ''} />
+          <input type="checkbox" class="filter-category" value="${cat.slug}" ${shopState.categories.includes(cat.slug) ? 'checked' : ''} />
           ${cat.name}
         </label>
       `).join('')}

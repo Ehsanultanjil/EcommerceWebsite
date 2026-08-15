@@ -202,6 +202,7 @@
 /* ---------- Product card ---------- */
 .product-card {
   position: relative;
+  isolation: isolate;
 }
 
 .product-card .product-media {

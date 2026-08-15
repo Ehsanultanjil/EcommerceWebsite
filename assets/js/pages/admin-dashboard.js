@@ -1,9 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await barazRequireAdmin())) return;
   renderAdminSidebar('dashboard');
 
   const revenue = BARAZ_REVENUE_SERIES[BARAZ_REVENUE_SERIES.length - 1];
   const orderCount = BARAZ_ADMIN_ORDERS.length * 41;
-  const productCount = barazAllAdminProducts().length;
+
+  let productCount = '—';
+  let categoryCount = '—';
+  try {
+    const [products, categories] = await Promise.all([apiGet('/products'), apiGet('/categories')]);
+    productCount = products.length;
+    categoryCount = categories.length;
+  } catch (e) {
+    // Stat tile just shows a dash if the API is unreachable — not fatal to the page.
+  }
 
   document.getElementById('stat-grid').innerHTML = `
     <div class="card stat-tile">
@@ -19,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="card stat-tile">
       <div class="stat-tile-label">Products</div>
       <div class="stat-tile-value">${productCount}</div>
-      <div class="stat-tile-delta">Across ${BARAZ_CATEGORIES ? BARAZ_CATEGORIES.length : 4} categories</div>
+      <div class="stat-tile-delta">Across ${categoryCount} categories</div>
     </div>
   `;
 

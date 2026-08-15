@@ -89,17 +89,31 @@ function renderNavbar(activePage) {
   if (typeof initSearch === 'function') initSearch();
 }
 
-function updateNavCounts() {
-  const cartCount = document.getElementById('cart-count');
-  const wishlistCount = document.getElementById('wishlist-count');
-  if (cartCount) {
-    const n = BarazStore.cartCount();
-    cartCount.textContent = n;
-    cartCount.hidden = n === 0;
-  }
-  if (wishlistCount) {
+async function updateNavCounts() {
+  const cartCountEl = document.getElementById('cart-count');
+  const wishlistCountEl = document.getElementById('wishlist-count');
+
+  if (wishlistCountEl) {
     const n = BarazStore.getWishlist().length;
-    wishlistCount.textContent = n;
-    wishlistCount.hidden = n === 0;
+    wishlistCountEl.textContent = n;
+    wishlistCountEl.hidden = n === 0;
+  }
+
+  if (cartCountEl) {
+    // Anonymous visitors have no cart — this is the expected, silent case, not an
+    // error, so it's checked before ever calling the API (avoids a 401 on every page).
+    const session = await barazGetSession();
+    if (!session) {
+      cartCountEl.hidden = true;
+      return;
+    }
+    try {
+      const cart = await apiGet('/cart');
+      const n = cart.items.reduce((sum, i) => sum + i.quantity, 0);
+      cartCountEl.textContent = n;
+      cartCountEl.hidden = n === 0;
+    } catch (e) {
+      cartCountEl.hidden = true;
+    }
   }
 }
