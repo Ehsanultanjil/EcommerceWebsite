@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BARAZ — Project Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap');
+
+  @page {
+    size: A4;
+    margin: 24mm 22mm 22mm 22mm;
+    @bottom-left {
+      content: "BARAZ — Project Report";
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #888;
+    }
+    @bottom-right {
+      content: "31 August 2026";
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #888;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #1e1e1e;
+    line-height: 1.6;
+    font-size: 10pt;
+    background: #fff;
+  }
+
+  .header {
+    margin-bottom: 28px;
+  }
+
+  .doc-type {
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-family: 'Newsreader', serif;
+    font-size: 34pt;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #111;
+    margin-bottom: 4px;
+    line-height: 1.1;
+  }
+
+  .subtitle {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 12.5pt;
+    color: #444;
+    margin-bottom: 26px;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 16px;
+    padding: 14px 0 16px 0;
+    border-top: 1.5px solid #111;
+    border-bottom: 1.5px solid #111;
+    margin-bottom: 30px;
+  }
+
+  .meta-item .label {
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #777;
+    margin-bottom: 4px;
+  }
+
+  .meta-item .value {
+    font-size: 9pt;
+    font-weight: 600;
+    color: #222;
+  }
+
+  .section {
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-family: 'Newsreader', serif;
+    font-size: 16pt;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 4px;
+  }
+
+  .section-num {
+    font-size: 9pt;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #2F6F4E;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    margin-bottom: 10px;
+    color: #2c2c2c;
+    text-align: justify;
+  }
+
+  ul {
+    margin: 8px 0 12px 18px;
+  }
+
+  li {
+    margin-bottom: 6px;
+    color: #2c2c2c;
+  }
+
+  li strong {
+    color: #111;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 16px 0;
+    font-size: 8.8pt;
+  }
+
+  th {
+    text-align: left;
+    font-size: 7.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #555;
+    padding: 8px 10px;
+    border-bottom: 1.5px solid #222;
+    background: #fafafa;
+  }
+
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e8e8e8;
+    vertical-align: top;
+    color: #333;
+  }
+
+  tr:last-child td {
+    border-bottom: 1.5px solid #222;
+  }
+
+  .tech-col {
+    font-weight: 600;
+    color: #111;
+  }
+
+  .diagram-box {
+    background: #fbfbfb;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0 16px 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8pt;
+    line-height: 1.4;
+    color: #222;
+    overflow: hidden;
+  }
+
+  .callout {
+    background: #F4F8F5;
+    border-left: 3px solid #2F6F4E;
+    padding: 10px 14px;
+    margin: 12px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 9pt;
+    color: #27523c;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .footer-meta {
+    margin-top: 30px;
+    padding-top: 12px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+    color: #888;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1 -->
+  <div class="header">
+    <div class="doc-type">Project Report</div>
+    <div class="title">BARAZ</div>
+    <div class="subtitle">A Full-Stack E-Commerce Platform — Supabase BaaS Architecture</div>
+    
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">Prepared By</div>
+        <div class="value">Ehsanul Tanjil</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Student ID</div>
+        <div class="value">223014022</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Course</div>
+        <div class="value">CSE347</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Date</div>
+        <div class="value">31 August 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">01</span> Overview</div>
+    <p>
+      <strong>BARAZ</strong> is a full-stack e-commerce platform built as a modern, high-performance web application utilizing a <strong>Backend-as-a-Service (BaaS)</strong> architecture powered directly by <strong>Supabase</strong>. It features a complete customer storefront, robust token authentication, persistent server-side cart synchronization, inventory-validated atomic checkout, customer order tracking, and an administrative back office.
+    </p>
+    <p>
+      Transitioning from a multi-tier Spring Boot architecture to a direct Supabase BaaS eliminated cold-start server delays and hosting overhead. All critical transactional rules, stock deductions, pricing integrity, and security policies are enforced at the database layer using <strong>PostgreSQL Row-Level Security (RLS)</strong>, stored procedures (PL/pgSQL RPCs), and database triggers.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">02</span> Objectives</div>
+    <ul>
+      <li><strong>Complete E-Commerce Lifecycle:</strong> Deliver a functional platform covering product discovery, cart synchronization, inventory verification, instant checkout, and admin oversight against live PostgreSQL storage.</li>
+      <li><strong>Direct BaaS Architecture:</strong> Streamline communication directly between the static frontend and Supabase via the JavaScript SDK, removing the need for a dedicated Java/Node API layer.</li>
+      <li><strong>Atomic Business Logic via RPC:</strong> Implement critical order mutations in PostgreSQL stored procedures (<code>SECURITY DEFINER</code>) to ensure ACID compliance and prevent client-side price tampering.</li>
+      <li><strong>Robust Data Security & RLS:</strong> Enforce strict Row-Level Security policies so customers can only access their own orders and cart data, while administrators maintain elevated privileges.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">03</span> Technology Stack</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Technology</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-col">Frontend</td>
+          <td>HTML5 / CSS3 / Vanilla JavaScript</td>
+          <td>Framework-free, zero build step; high performance and instant page load.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Backend (BaaS)</td>
+          <td>Supabase Platform</td>
+          <td>Managed PostgreSQL, Auth, Storage, and serverless Edge RPC endpoints.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Database</td>
+          <td>PostgreSQL 15 (Supabase)</td>
+          <td>Relational schema secured with Row-Level Security (RLS) & Triggers.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Business Logic</td>
+          <td>PL/pgSQL Stored Procedures</td>
+          <td>Atomic <code>checkout()</code> and <code>cancel_order()</code> executed server-side.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Authentication</td>
+          <td>Supabase Auth</td>
+          <td>Email + password authentication with ES256-signed JWT sessions.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">File Storage</td>
+          <td>Supabase Storage</td>
+          <td>Public CDN hosting for product catalog photography and media assets.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Dev Server</td>
+          <td>Node.js (<code>server.mjs</code>)</td>
+          <td>Lightweight local static development server.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <strong>Hosting:</strong> Frontend is deployed to Vercel/Netlify/GitHub Pages as pure static assets, while database, auth, and logic run on Supabase with zero server maintenance and 100% uptime.
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page-break"></div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">04</span> System Architecture</div>
+    <p>
+      The frontend communicates directly with Supabase via the <code>@supabase/supabase-js</code> client library using standard JWT bearer authorization. There is no intermediate container or API layer:
+    </p>
+
+    <div class="diagram-box">
+Browser (Static HTML5 / CSS3 / Vanilla JS)
+  │
+  │  fetch() + Supabase JS Client (JWT Bearer Token)
+  ▼
+Supabase BaaS
+  ├── Supabase Auth (JWT Verification & Session Management)
+  ├── Row-Level Security (Postgres RLS Table Access Rules)
+  ├── PL/pgSQL Stored Procedures (Atomic checkout & cancel_order RPCs)
+  ├── PostgreSQL 15 Relational Database (12 Structured Tables)
+  └── Supabase Storage Bucket (Product Image Assets)
+    </div>
+    <p>
+      Client requests carry JWT tokens verified automatically by Supabase. Access to raw table rows is filtered by PostgreSQL RLS, while complex checkout calculations are handled by server-side RPC functions.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">05</span> Database Design & Security</div>
+    <p>
+      A relational schema of <strong>12 tables</strong> covers identity, product catalog, cart, orders, and customer engagement:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Tables</th>
+          <th>Description & Security Scope</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-col">Identity</td>
+          <td><code>profiles</code></td>
+          <td>User accounts linked to <code>auth.users</code>; protected by role-escalation triggers.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Catalog</td>
+          <td><code>categories</code>, <code>products</code>, <code>product_images</code></td>
+          <td>Publicly readable for active items; write-restricted strictly to <code>ADMIN</code>.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Cart</td>
+          <td><code>cart</code>, <code>cart_items</code></td>
+          <td>Isolated user shopping carts; RLS strictly enforces <code>auth.uid() = user_id</code>.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Orders</td>
+          <td><code>orders</code>, <code>order_items</code>, <code>payments</code></td>
+          <td>Customer viewable only; mutations managed via atomic RPC and admin operations.</td>
+        </tr>
+        <tr>
+          <td class="tech-col">Engagement</td>
+          <td><code>reviews</code>, <code>wishlist</code>, <code>coupons</code></td>
+          <td>Customer reviews, persisted saved wishlists, and discount coupon codes.</td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <li><strong>Row-Level Security (RLS):</strong> Enabled across every table. The helper function <code>is_admin()</code> prevents policy recursion.</li>
+      <li><strong>Role Escalation Guard:</strong> The <code>prevent_role_self_escalation()</code> trigger prevents non-admins from self-promoting to <code>ADMIN</code>.</li>
+      <li><strong>Automated Profile Creation:</strong> The <code>handle_new_user()</code> trigger provisions a profile row upon registration.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">06</span> Serverless Stored Procedures (RPC)</div>
+    <p>
+      Complex, multi-table transactions are executed inside atomic PostgreSQL functions:
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Function</th>
+          <th>Type</th>
+          <th>Role & Execution Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tech-col"><code>public.checkout()</code></td>
+          <td>PL/pgSQL RPC</td>
+          <td>Validates user cart, verifies real-time stock, computes true total from database prices, inserts order + items, decrements inventory, creates payment record, and clears cart in a single transaction.</td>
+        </tr>
+        <tr>
+          <td class="tech-col"><code>public.cancel_order()</code></td>
+          <td>PL/pgSQL RPC</td>
+          <td>Verifies order status and ownership, sets status to <code>CANCELLED</code>, and automatically returns item quantities back into product inventory.</td>
+        </tr>
+        <tr>
+          <td class="tech-col"><code>public.is_admin()</code></td>
+          <td>SQL Function</td>
+          <td>Security definer helper checking if the calling user has <code>ADMIN</code> role.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="page-break"></div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">07</span> Key Features</div>
+    <ul>
+      <li><strong>Role-Based Routing:</strong> Single login page intelligently redirects admins to <code>admin/dashboard.html</code> and customers to <code>account.html</code>.</li>
+      <li><strong>Route Guards:</strong> Customer pages automatically deflect admin sessions to the back-office, while admin pages strictly enforce <code>barazRequireAdmin()</code>.</li>
+      <li><strong>Dynamic Product Catalog:</strong> Instant search, category filters, price range sliders, and multi-criteria sorting.</li>
+      <li><strong>Multi-Tab Product Detail:</strong> Full product showcase with dynamic photo gallery, stock tracking, and quantity stepper.</li>
+      <li><strong>Atomic ACID Checkout:</strong> Server-side stock deduction, calculated shipping rates (free over ৳15,000), and multi-payment simulation.</li>
+      <li><strong>Customer Order Tracking:</strong> Order status step tracker (<code>Confirmed → Processing → Shipped → Delivered</code>) with receipt modals.</li>
+      <li><strong>Full Administrative Back-Office:</strong> Metrics cards, sales charts, product CRUD operations, order status updates, and session logout.</li>
+      <li><strong>Zero Cold-Start Delay:</strong> Instant responses with no container spinning or idle timeout latency.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">08</span> Deployment</div>
+    <ul>
+      <li><strong>Frontend:</strong> Hosted as high-performance static files on <strong>Vercel</strong> / <strong>Netlify</strong> / <strong>GitHub Pages</strong>.</li>
+      <li><strong>Backend & Database:</strong> Hosted on <strong>Supabase</strong> with edge-accelerated REST and RPC APIs.</li>
+    </ul>
+    <div class="callout">
+      Eliminating standalone virtual machines or containers removed all free-tier sleep cycles. The platform responds instantly to all client interactions.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">09</span> Known Limitations & Future Work</div>
+    <ul>
+      <li><strong>Payment Processing:</strong> Card and mobile payments are processed in instant simulation mode; COD orders default to <code>PENDING</code>.</li>
+      <li><strong>Coupons & Reviews:</strong> Database tables are fully migrated and ready; frontend coupon redemption and review submission UI can be wired directly to Supabase.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span class="section-num">10</span> Conclusion</div>
+    <p>
+      <strong>BARAZ</strong> successfully demonstrates the power, speed, and simplicity of modern <strong>Serverless BaaS architecture</strong>. By leveraging Supabase for database-level security, authentication, and atomic stored procedures, the application provides an enterprise-ready e-commerce experience with lightning-fast load times, zero server maintenance, and guaranteed transactional integrity.
+    </p>
+  </div>
+
+  <div class="footer-meta">
+    <span>BARAZ — Project Report</span>
+    <span>31 August 2026</span>
+  </div>
+
+</body>
+</html>
