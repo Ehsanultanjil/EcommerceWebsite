@@ -27,28 +27,38 @@ document.addEventListener('DOMContentLoaded', () => {
       const submitBtn = registerForm.querySelector('button[type=submit]');
       submitBtn.disabled = true;
       const data = new FormData(registerForm);
-      const { data: signUpData, error } = await barazSignUp(data.get('email'), data.get('password'), data.get('name'));
-      submitBtn.disabled = false;
+      const email = data.get('email');
+      const password = data.get('password');
+      const fullName = data.get('name');
+
+      const { data: signUpData, error } = await barazSignUp(email, password, fullName);
 
       if (error) {
+        submitBtn.disabled = false;
         showToast(error.message);
         return;
       }
 
+      // If already has session or can sign in immediately
       if (signUpData.session) {
+        submitBtn.disabled = false;
         showToast('Account created');
         await barazRedirectByRole();
         return;
       }
 
-      // Email confirmation is required on this project — no session yet. Swap the
-      // form's own content rather than its parent, so the surrounding card layout
-      // (logo, heading) stays intact.
-      registerForm.innerHTML = `
-        <h3>Check your email</h3>
-        <p class="text-secondary">We sent a confirmation link to <strong>${data.get('email')}</strong>. Confirm your address, then sign in.</p>
-        <a href="login.html" class="btn btn-primary btn-block">Go to Sign In</a>
-      `;
+      // Attempt immediate sign in
+      const { error: signInError } = await barazSignIn(email, password);
+      submitBtn.disabled = false;
+
+      if (!signInError) {
+        showToast('Account created and signed in');
+        await barazRedirectByRole();
+      } else {
+        // Only if Supabase server strictly enforces email confirmation
+        showToast('Account created! Please disable "Confirm email" in Supabase settings for instant login.');
+        window.location.href = 'login.html';
+      }
     });
   }
 });
