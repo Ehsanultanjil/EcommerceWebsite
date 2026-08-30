@@ -56,6 +56,11 @@ body.admin-body {
   font-weight: 600;
   color: var(--text-secondary);
   transition: background var(--transition-fast), color var(--transition-fast);
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .admin-nav-link:hover {
@@ -66,6 +71,11 @@ body.admin-body {
 .admin-nav-link.active {
   background: var(--text);
   color: #fff;
+}
+
+.admin-nav-link.admin-logout:hover {
+  color: var(--danger);
+  background: var(--danger-bg);
 }
 
 .admin-main {
