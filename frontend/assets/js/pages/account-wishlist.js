@@ -1,7 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('account');
   renderFooter();
   renderAccountSidebar('wishlist');
+  if (!(await barazRequireCustomer())) return;
   renderWishlist();
   document.addEventListener('baraz:wishlist-change', renderWishlist);
 });

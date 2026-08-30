@@ -1,8 +1,7 @@
-/* Mock data for admin sections that have no backend yet (out of scope for the API
-   connection): dashboard revenue/order stats, customers, coupons, and category CRUD.
-   Products and order status ARE connected — see pages/admin-products.js,
-   pages/admin-product-edit.js, pages/admin-orders.js, which talk to the real API
-   directly and no longer use this file. */
+/* Sample data for admin sections that use local display data: dashboard revenue/order
+   stats, customers, and coupons. Products and order status are connected to Supabase
+   BaaS — see pages/admin-products.js, pages/admin-product-edit.js,
+   pages/admin-orders.js. */
 
 const BARAZ_ADMIN_ORDERS = [
   { id: 'BZ10284', customer: 'Swapnil Kumar', email: 'swapnil@example.com', date: '2026-08-14', items: 2, total: 30200, status: 'Processing', payment: 'Cash on Delivery' },

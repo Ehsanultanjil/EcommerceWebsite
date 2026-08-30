@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('account');
   renderFooter();
   renderAccountSidebar('orders');
+  if (!(await barazRequireCustomer())) return;
   await loadOrders();
 });
 

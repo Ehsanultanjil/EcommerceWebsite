@@ -1,10 +1,12 @@
 {
   "name": "ecommers-website",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000E\u0000c\u0000o\u0000m\u0000m\u0000e\u0000r\u0000c\u0000e\u0000W\u0000e\u0000b\u0000s\u0000i\u0000t\u0000e\u0000\r\u0000 \u0000",
-  "main": "index.js",
+  "description": "BARAZ E-Commerce Storefront - Direct Supabase BaaS",
+  "main": "server.mjs",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node server.mjs",
+    "start": "node server.mjs"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,8 @@
   "devDependencies": {
     "pg": "^8.23.0",
     "supabase": "^2.114.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.4"
   }
 }

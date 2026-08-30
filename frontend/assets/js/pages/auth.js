@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
       showToast('Signed in');
-      window.location.href = 'account.html';
+      await barazRedirectByRole();
     });
   }
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (signUpData.session) {
         showToast('Account created');
-        window.location.href = 'account.html';
+        await barazRedirectByRole();
         return;
       }
 
@@ -52,3 +52,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+

@@ -1,7 +1,8 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   renderNavbar('account');
   renderFooter();
   renderAccountSidebar('settings');
+  if (!(await barazRequireCustomer())) return;
 
   const content = document.getElementById('account-content');
   content.innerHTML = `

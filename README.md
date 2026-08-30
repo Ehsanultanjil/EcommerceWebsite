@@ -1,123 +1,90 @@
-# BARAZ
+# BARAZ — E-Commerce Storefront (Supabase BaaS)
 
-A full-stack e-commerce platform built as a Java Design Patterns Lab project — premium/minimal storefront, real authentication, real checkout, and a working admin panel, with eight GoF design patterns wired into the actual order flow (not bolted on as a separate demo).
+A full-stack e-commerce platform built directly on **Supabase as Backend-as-a-Service (BaaS)** — premium/minimal storefront, real authentication, instant checkout with atomic Postgres RPC, customer dashboard, and a working admin panel with Row Level Security (RLS).
 
-**Live backend:** https://baraz-backend.onrender.com (free tier — first request after idle may take ~30–50s to wake up)
+---
 
 ## Architecture
 
 ```
 Browser
-  │  static HTML/CSS/JS — no framework, no build step
+  │  HTML5 / Vanilla CSS / Vanilla JS (no build step, instant load)
   ▼
-frontend/            served as static files (any static host — Vercel/Netlify/GitHub Pages/etc.)
-  │  fetch() + Supabase Auth (JWT)
-  ▼
-backend/             Spring Boot REST API (Java 17)
-  │  JDBC / Spring Data JPA
-  ▼
-Supabase             Postgres + Auth + Storage
-supabase/migrations  schema, RLS policies, seed data
+Supabase BaaS (Postgres + Auth + Storage + RPC Functions + RLS)
 ```
 
-The frontend never talks to Supabase for business data directly — only for authentication (login/register/logout, via `supabase-js`). Every product, cart, order, and admin operation goes through the Spring Boot API, which verifies the caller's Supabase-issued JWT against Supabase's public JWKS endpoint before doing anything.
+The frontend communicates directly with Supabase via `@supabase/supabase-js`. Business logic, inventory management, price calculations, and data access control are secured at the database layer using **PostgreSQL Row Level Security (RLS)** and **Atomic Postgres RPC Functions**.
 
-## Design patterns
+---
 
-Implemented in `backend/src/main/java/com/nova/`, all wired into the real checkout flow (`CheckoutFacade.checkout()` exercises all of them in one call):
+## Features
 
-| Pattern | Package | What it does here |
-|---|---|---|
-| Facade | `facade/` | `CheckoutFacade` — the single entry point checkout actually goes through |
-| Builder | `builder/` | `OrderBuilder` — constructs an `Order` from cart + shipping + pricing inputs |
-| Strategy | `strategy/` | Pluggable discount (`No`/`Percentage`/`Fixed`) and shipping (`Standard`/`Free`) calculation |
-| Factory Method | `factory/` | `PaymentFactory` returns the right `PaymentProcessor` for COD/Card/Mobile without the caller naming a concrete class |
-| Adapter | `adapter/` | `PaymentGatewayAdapter` translates a mock third-party payment SDK's shape into the app's own interface |
-| Observer | `observer/` | `OrderEventPublisher` notifies Customer/Admin/Inventory observers on order status changes (Spring autowires every `OrderObserver` bean) |
-| Decorator | `decorator/` | Stackable product add-on pricing (gift wrap / packaging / warranty) — see `GET /api/products/{id}/price-preview` |
-| Command | `command/` | Cart and order mutations run through `CommandInvoker`, which keeps a short in-memory execution history (`GET /api/admin/command-history`) |
+- **Storefront**: Responsive product catalog with category filtering, instant search, price ranges, and sorting.
+- **Product Details**: Multi-tab interface (Description, Specifications, Reviews), image gallery, stock checking, and quantity stepper.
+- **Cart Management**: Real-time cart synchronization directly in Postgres.
+- **Atomic Checkout**: Server-side Postgres RPC (`checkout`) verifies stock, computes true totals, creates orders, decrements inventory, records payments, and empties the cart in a single transaction.
+- **Customer Account**: Order history, live status tracking, order cancellation with stock restoration, wishlist, and saved addresses.
+- **Admin Panel**: Role-based access control (`CUSTOMER` vs `ADMIN`), product management (Create, Read, Update, Delete), and order status management.
 
-## Project structure
+---
+
+## Project Structure
 
 ```
-frontend/     Static site — pages, components, assets (no build step; open/serve directly)
-backend/      Spring Boot API (Maven, Java 17)
-supabase/     SQL migrations + seed data for the Postgres schema
+frontend/             Static storefront pages, components, styles, and data clients
+  assets/
+    css/              Modular CSS design system
+    js/
+      components/     Reusable UI components (navbar, footer, toast, modal, product cards)
+      pages/          Page controllers (shop, cart, checkout, account, admin)
+      utils/          Supabase auth and BaaS client layer (api.js, auth.js)
+supabase/
+  migrations/         SQL migrations (schemas, RLS policies, RPC functions)
+  seed.sql            Initial catalog and sample product data
+server.mjs            Lightweight local dev server
 ```
 
-## Running locally
+---
 
-**Prerequisites:** Java 17+, Maven (or use the bundled `./mvnw`), Python 3 (or any static file server) or a live-reload extension, a Supabase project with the schema in `supabase/migrations` applied.
+## Running Locally
 
-### 1. Database
+### 1. Prerequisites
+- **Node.js** (v18+)
 
-Apply the migrations in `supabase/migrations/` (in order) to your Supabase project, then run `supabase/seed.sql`. Easiest via the Supabase CLI:
+### 2. Configure Supabase Credentials
+Ensure `frontend/assets/js/config.js` has your Supabase project URL and Anon (Publishable) key:
+```javascript
+const BARAZ_CONFIG = {
+  SUPABASE_URL: 'https://<your-project-ref>.supabase.co',
+  SUPABASE_ANON_KEY: 'sb_publishable_...',
+};
+```
 
+### 3. Start the Development Server
 ```bash
-npx supabase link --project-ref <your-project-ref>
-npx supabase db push
+npm run dev
 ```
+Open [http://localhost:5500](http://localhost:5500) in your browser.
 
-### 2. Backend
+---
 
-```bash
-cd backend
-cp .env.example .env   # fill in your Supabase values (see comments in the file)
-# then export those vars into your shell, or set them however your OS prefers
-mvn spring-boot:run
-```
+## Database Migrations & Administration
 
-Runs on `http://localhost:8080`. Uses the Supabase **session pooler** connection string, not the direct host — the direct host is IPv6-only and will fail to resolve on most local networks and several PaaS hosts.
+### Applying Migrations
+Apply all SQL files in `supabase/migrations/` in chronological order to your Supabase Postgres database.
 
-### 3. Frontend
-
-```bash
-cd frontend
-python -m http.server 5500
-```
-
-Open `http://localhost:5500`. Update `assets/js/config.js` with your own Supabase URL/anon key and API base URL if they differ from the defaults.
-
-### First admin account
-
-New signups default to the `CUSTOMER` role. To promote one to admin:
-
+### Promoting a User to Admin
+New user registrations default to the `CUSTOMER` role. To promote an account to `ADMIN`:
 ```sql
-update public.profiles set role = 'ADMIN' where email = 'you@example.com';
+UPDATE public.profiles SET role = 'ADMIN' WHERE email = 'admin@example.com';
 ```
 
-## API overview
+---
 
-```
-GET    /api/products                  ?search= ?featured= ?newArrivals=
-GET    /api/products/{id}
-GET    /api/products/category/{id}
-GET    /api/products/{id}/price-preview   ?addOns=GIFT_WRAP,EXTENDED_WARRANTY,PREMIUM_PACKAGING
-GET    /api/categories
-GET    /api/auth/me
+## Deploying to Production
 
-GET    /api/cart
-POST   /api/cart/items
-PUT    /api/cart/items/{id}
-DELETE /api/cart/items/{id}
-
-POST   /api/checkout
-GET    /api/orders
-GET    /api/orders/{id}
-POST   /api/orders/{id}/cancel
-
-POST   /api/admin/products
-PUT    /api/admin/products/{id}
-DELETE /api/admin/products/{id}
-GET    /api/admin/orders              ?status=
-PUT    /api/admin/orders/{id}/status
-GET    /api/admin/command-history
-```
-
-All `/api/admin/**` routes require the `ADMIN` role. Everything else that isn't explicitly public requires a valid Supabase-issued bearer token.
-
-## Known limitations
-
-- No real payment gateway — card/mobile payments are mock-processed instantly, COD is left `PENDING`.
-- Coupons, reviews, and wishlist/addresses have no backend yet — wishlist and saved addresses stay in `localStorage`, coupons/reviews aren't implemented.
-- Admin Customers/Coupons/Analytics/Categories pages run on local sample data (no corresponding API).
+Since the application uses a pure static frontend and direct Supabase BaaS, you can deploy the `frontend/` folder to any static hosting service with zero server maintenance:
+- **Vercel**: Deploy directory `frontend`
+- **Netlify**: Publish directory `frontend`
+- **GitHub Pages**: Serve from `frontend` or root
+- **Cloudflare Pages**: Direct upload of `frontend`

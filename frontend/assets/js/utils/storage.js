@@ -1,6 +1,5 @@
-/* localStorage-backed state for the pieces that have no backend yet: wishlist and
-   saved addresses. Cart, session/auth, and orders are now real (Supabase Auth +
-   the Spring Boot API) — see utils/auth.js and utils/api.js. */
+/* localStorage-backed state for wishlist and saved addresses. Cart, session/auth,
+   and orders are handled by Supabase BaaS — see utils/auth.js and utils/api.js. */
 const BARAZ_KEYS = {
   wishlist: 'baraz_wishlist',
   addresses: 'baraz_addresses',

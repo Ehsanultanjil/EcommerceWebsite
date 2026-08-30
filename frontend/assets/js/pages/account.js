@@ -17,15 +17,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  let me;
-  try {
-    me = await apiGet('/auth/me');
-  } catch (e) {
-    if (e instanceof ApiError && e.status !== 401) {
-      content.innerHTML = `<p class="text-secondary">Couldn't load your profile — try refreshing.</p>`;
-    }
-    return;
-  }
+  // Redirect admins to admin dashboard
+  const customerCheck = await barazRequireCustomer();
+  if (!customerCheck) return;
+
+  let me = customerCheck;
 
   const initial = (me.fullName || me.email).trim().charAt(0).toUpperCase();
 

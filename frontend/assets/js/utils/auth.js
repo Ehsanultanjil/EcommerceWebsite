@@ -58,3 +58,34 @@ async function barazRequireAdmin() {
     return null;
   }
 }
+
+/** Redirects admins to the admin dashboard. Call at the top of customer account pages. */
+async function barazRequireCustomer() {
+  const session = await barazGetSession();
+  if (!session) return null;
+  try {
+    const me = await apiGet('/auth/me');
+    if (me.role === 'ADMIN') {
+      window.location.href = 'admin/dashboard.html';
+      return null;
+    }
+    return me;
+  } catch (e) {
+    return null;
+  }
+}
+
+/** After login/register, redirect based on role: admin → admin dashboard, customer → account. */
+async function barazRedirectByRole() {
+  try {
+    const me = await apiGet('/auth/me');
+    if (me.role === 'ADMIN') {
+      window.location.href = 'admin/dashboard.html';
+    } else {
+      window.location.href = 'account.html';
+    }
+  } catch (e) {
+    window.location.href = 'account.html';
+  }
+}
+
