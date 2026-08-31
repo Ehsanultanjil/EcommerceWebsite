@@ -66,6 +66,23 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`Frontend running at http://localhost:${PORT}`);
+import os from 'os';
+
+function getLocalIp() {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
+server.listen(PORT, '0.0.0.0', () => {
+  const localIp = getLocalIp();
+  console.log(`\n  🚀 BARAZ Storefront running at:`);
+  console.log(`  - Local:   http://localhost:${PORT}`);
+  console.log(`  - Mobile:  http://${localIp}:${PORT}\n`);
 });

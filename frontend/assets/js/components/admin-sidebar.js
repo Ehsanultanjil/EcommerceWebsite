@@ -23,7 +23,14 @@ function renderAdminSidebar(active) {
   const root = document.getElementById('admin-sidebar-root');
   if (!root) return;
   root.innerHTML = `
-    <aside class="admin-sidebar">
+    <div class="admin-mobile-header">
+      <button class="icon-btn" id="admin-menu-toggle" aria-label="Toggle Menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+      <div class="admin-logo" style="padding:0">BARAZ <span>ADMIN</span></div>
+    </div>
+    <div class="admin-backdrop" id="admin-backdrop"></div>
+    <aside class="admin-sidebar" id="admin-sidebar">
       <div class="admin-logo">BARAZ <span>ADMIN</span></div>
       <nav class="admin-nav">
         ${BARAZ_ADMIN_LINKS.map((l) => `
@@ -47,6 +54,22 @@ function renderAdminSidebar(active) {
       </div>
     </aside>
   `;
+
+  const sidebar = document.getElementById('admin-sidebar');
+  const backdrop = document.getElementById('admin-backdrop');
+  const toggleBtn = document.getElementById('admin-menu-toggle');
+
+  if (toggleBtn && sidebar && backdrop) {
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      backdrop.classList.toggle('open');
+    });
+
+    backdrop.addEventListener('click', () => {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('open');
+    });
+  }
 
   const logoutBtn = document.getElementById('admin-logout-btn');
   if (logoutBtn) {
